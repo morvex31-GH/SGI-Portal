@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
   
+  <!-- jsPDF Engine for Direct Circular & Prospectus PDF Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <link rel="stylesheet" href="styles.css">
 
   <style>
@@ -94,7 +97,7 @@
   <div class="noise-overlay" aria-hidden="true"></div>
   <div class="custom-cursor" id="cursor"></div>
 
-  <!-- Sticky Frosted Header with Mobile Menu Toggle -->
+  <!-- Sticky Header -->
   <header class="site-header">
     <div class="header-inner">
       <a href="#home" class="brand-logo route-link" data-route="home">
@@ -105,7 +108,6 @@
         </div>
       </a>
 
-      <!-- Desktop Route Navigation -->
       <nav class="nav-links">
         <a href="#home" class="nav-item route-link active" data-route="home">Home</a>
         <a href="#about" class="nav-item route-link" data-route="about">About</a>
@@ -118,7 +120,6 @@
         <a href="tel:9316093494" class="btn btn-secondary magnetic-btn header-call-btn">Call: 93160 93494</a>
         <button class="btn btn-primary magnetic-btn header-apply-btn" onclick="openModal()">Apply</button>
         
-        <!-- Mobile Menu Toggle Button (Visible on screens <= 992px) -->
         <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open mobile navigation menu">
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
@@ -207,10 +208,11 @@
               Start Application <span class="dynamic-session">2026–27</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
-            <a href="#prospectus-download" onclick="alert('Downloading Official SGI Prospectus 2026–27 (PDF)...')" class="btn btn-glass btn-large magnetic-btn">
+            <!-- Direct PDF Download for Official Prospectus -->
+            <button onclick="downloadProspectusPDF()" class="btn btn-glass btn-large magnetic-btn">
               Download Prospectus (PDF)
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -250,7 +252,7 @@
             </div>
           </div>
 
-          <!-- Bento 3: Accreditations (Bigger Heading & Centered Box Fit) -->
+          <!-- Bento 3: Accreditations -->
           <div class="bento-card bento-accreditations-card">
             <div class="accreditations-head-group">
               <span class="card-tag">Regulatory Councils</span>
@@ -306,7 +308,7 @@
             </ul>
           </div>
 
-          <!-- Bento 4: Interactive, Scrollable & Filterable Notice Board -->
+          <!-- Bento 4: Interactive Notice Board with Direct PDF Downloads -->
           <div class="bento-card bento-span-2 bento-notice-hub" id="noticeHubCard">
             <div class="bento-header-flex">
               <div>
@@ -329,7 +331,7 @@
             </div>
 
             <div class="notice-bottom-actions">
-              <span class="notice-feed-hint">💡 Click any circular card or "Read More" for complete circular text and reference IDs.</span>
+              <span class="notice-feed-hint">💡 Click "PDF" on any card to download the signed circular letterhead.</span>
               <a href="#institutes" class="btn btn-secondary btn-sm route-link" data-route="institutes">
                 Browse All Institutes &rarr;
               </a>
@@ -736,7 +738,7 @@
     </div>
   </div>
 
-  <!-- Interactive Notice Details Modal -->
+  <!-- Interactive Notice Details Modal with Direct PDF Download -->
   <div class="modal-backdrop" id="noticeModal" aria-hidden="true">
     <div class="modal-card modal-notice-expanded">
       <button class="modal-close" onclick="closeNoticeModal()">&times;</button>
@@ -755,7 +757,8 @@
         <p id="modalNoticeBody" style="color: var(--text-muted); line-height: 1.8; font-size: 0.95rem; white-space: pre-line;">Official circular detailed contents will appear here.</p>
       </div>
       <div class="notice-modal-footer">
-        <button class="btn btn-primary btn-sm" onclick="alert('Downloading official signed circular attachment (PDF)...')">
+        <!-- Direct PDF Download function -->
+        <button class="btn btn-primary btn-sm" onclick="downloadCurrentNoticePDF()">
           Download Circular (PDF) 📄
         </button>
         <button class="btn btn-secondary btn-sm" onclick="closeNoticeModal()">Close Notice</button>
@@ -763,7 +766,7 @@
     </div>
   </div>
 
-  <!-- Comprehensive Footer with Statutory & Compliance Matrix (Zero Admin Traces) -->
+  <!-- Comprehensive Footer with Statutory & Compliance Matrix -->
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-col">
@@ -776,10 +779,10 @@
       <div class="footer-col">
         <h4 class="footer-col-title">Mandatory Regulatory Disclosures</h4>
         <ul class="footer-links-list">
-          <li><a href="#compliance" onclick="alert('Opening AICTE Mandatory Disclosure Document (PDF)...')">AICTE Mandatory Disclosure (PDF)</a></li>
-          <li><a href="#compliance" onclick="alert('Opening Pharmacy Council of India (PCI) Approvals...')">PCI Statutory Approvals</a></li>
-          <li><a href="#compliance" onclick="alert('Opening INC / PNRC Nursing Approvals...')">INC & PNRC Affiliation Orders</a></li>
-          <li><a href="#compliance" onclick="alert('Opening Official Institutional Fee Structure...')">Approved Fee Structure & Prospectus</a></li>
+          <li><a href="#compliance" onclick="downloadProspectusPDF()">AICTE Mandatory Disclosure (PDF)</a></li>
+          <li><a href="https://www.pci.nic.in/" target="_blank" rel="noopener noreferrer">PCI Statutory Approvals ↗</a></li>
+          <li><a href="https://indiannursingcouncil.org/" target="_blank" rel="noopener noreferrer">INC & PNRC Affiliation Orders ↗</a></li>
+          <li><a href="#compliance" onclick="downloadProspectusPDF()">Approved Fee Structure & Prospectus</a></li>
         </ul>
       </div>
 
@@ -787,7 +790,7 @@
         <h4 class="footer-col-title">Grievance & Student Safety</h4>
         <ul class="footer-links-list">
           <li><a href="tel:18001805522" style="color: var(--accent-primary); font-weight: 700;">Anti-Ragging Helpline: 1800-180-5522</a></li>
-          <li><a href="#antiragging" onclick="alert('Anti-Ragging Committee: Headed by Principal & Administrative Officers.')">Anti-Ragging Committee & Squad</a></li>
+          <li><a href="#antiragging" onclick="alert('Anti-Ragging Committee: Headed by Principal & Administrative Officers. Toll-Free: 1800-180-5522')">Anti-Ragging Committee & Squad</a></li>
           <li><a href="#grievance" onclick="alert('Internal Complaints Committee (ICC): Contact studentgrievance@sgigurdaspur.org')">Internal Complaints Committee (ICC)</a></li>
           <li><a href="#rti" onclick="alert('Right to Information (RTI) Cell: V.P.O. Hayat Nagar, Gurdaspur')">Right to Information (RTI) Cell</a></li>
         </ul>
