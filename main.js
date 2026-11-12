@@ -1,9 +1,10 @@
 /**
  * SGI Gurdaspur - Modern Single Page Application (SPA) Engine
- * Includes Mobile Drawer Navigation, Active Touch Handlers, and Notice Hub
+ * Includes Real-Time PDF Circular & Prospectus Generator
  */
 
 let loadedNotices = [];
+let currentActiveNotice = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   initDynamicAcademicYear();
@@ -28,7 +29,6 @@ function initRouter() {
       routeId = 'home';
     }
 
-    // 1. Hide all page views and reveal matching route
     document.querySelectorAll('.page-view').forEach((view) => {
       view.classList.remove('active');
     });
@@ -38,7 +38,6 @@ function initRouter() {
       activeView.classList.add('active');
     }
 
-    // 2. Synchronize navigation link active classes (both desktop and mobile)
     document.querySelectorAll('.nav-links .route-link, .mobile-nav-links .route-link').forEach((link) => {
       if (link.getAttribute('data-route') === routeId) {
         link.classList.add('active');
@@ -47,24 +46,20 @@ function initRouter() {
       }
     });
 
-    // 3. Scroll to top on page switch
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
-  // Intercept click on any router link
   document.querySelectorAll('.route-link').forEach((link) => {
     link.addEventListener('click', (e) => {
       const targetRoute = link.getAttribute('data-route');
       if (targetRoute) {
         e.preventDefault();
         window.location.hash = targetRoute;
-        // Auto-close mobile drawer if open
         closeMobileNav();
       }
     });
   });
 
-  // Handle browser back/forward and initial page loads
   function handleHashChange() {
     const hash = window.location.hash.replace('#', '').trim() || 'home';
     navigateTo(hash);
@@ -81,31 +76,21 @@ function initMobileNavigation() {
   const toggleBtn = document.getElementById('mobileMenuToggle');
   const closeBtn = document.getElementById('mobileNavClose');
   const backdrop = document.getElementById('mobileNavBackdrop');
-  const drawer = document.getElementById('mobileNavDrawer');
 
   if (toggleBtn) {
-    toggleBtn.addEventListener('click', () => {
-      openMobileNav();
-    });
+    toggleBtn.addEventListener('click', () => openMobileNav());
   }
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      closeMobileNav();
-    });
+    closeBtn.addEventListener('click', () => closeMobileNav());
   }
 
   if (backdrop) {
-    backdrop.addEventListener('click', () => {
-      closeMobileNav();
-    });
+    backdrop.addEventListener('click', () => closeMobileNav());
   }
 
-  // Close on Escape key press
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeMobileNav();
-    }
+    if (e.key === 'Escape') closeMobileNav();
   });
 }
 
@@ -114,7 +99,7 @@ function openMobileNav() {
   if (drawer) {
     drawer.classList.add('open');
     drawer.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.style.overflow = 'hidden';
   }
 }
 
@@ -133,9 +118,8 @@ function closeMobileNav() {
 function initDynamicAcademicYear() {
   const now = new Date();
   const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0 = Jan, 1 = Feb, 2 = Mar...
+  const currentMonth = now.getMonth();
 
-  // March onwards indicates admissions for upcoming session (Year)-(Year+1)
   let startYear = currentMonth >= 2 ? currentYear : currentYear - 1;
   let nextShortYear = (startYear + 1).toString().slice(-2);
   let sessionString = `${startYear}–${nextShortYear}`;
@@ -166,7 +150,6 @@ function initHeroCanvas() {
     height = canvas.height = window.innerHeight;
   });
 
-  // Fewer particles on mobile for performance
   const particleCount = window.innerWidth < 768 ? 20 : 45;
 
   const particles = Array.from({ length: particleCount }, () => ({
@@ -223,7 +206,7 @@ function initHeroCanvas() {
 }
 
 /* ========================================================
-   5. MAGNETIC MICRO-INTERACTIONS (Disabled on mobile)
+   5. MAGNETIC MICRO-INTERACTIONS
    ======================================================== */
 function initMagneticButtons() {
   if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return;
@@ -296,10 +279,9 @@ function initCourseFiltering() {
 }
 
 /* ========================================================
-   8. SCROLLABLE NOTICE BOARD WITH CATEGORY TABS & "READ MORE"
+   8. NOTICE BOARD FEED & CATEGORY TABS
    ======================================================== */
 async function initNoticeBoard() {
-  const container = document.getElementById('noticesContainer');
   const filterChips = document.querySelectorAll('.notice-filter-chip');
 
   try {
@@ -314,26 +296,26 @@ async function initNoticeBoard() {
         category: "ikgptu",
         category_label: "IKGPTU Jalandhar",
         title: "Semester End Regular & Re-appear Theory / Practical Examination Schedule",
-        date: "Active Notification",
+        date: "Academic Session Notification",
         ref_no: "IKGPTU/EXAM/2026/8941",
         authority: "Office of the Controller of Examinations, IKGPTU",
         badge: "University Exam",
         badge_class: "badge-urgent",
         summary: "Portal open for fill-up of online examination forms for B.Tech, MBA, BCA and B.Sc streams.",
-        details: "All students of SCET and SIMT are notified that regular & re-appear exam forms are open on the IKGPTU student portal."
+        details: "All students of Sukhjinder College of Engineering & Technology (SCET) and SIMT are notified that regular & re-appear examination forms are active on the IKGPTU student portal. Regular and re-appear examination forms along with university prescribed fees must be submitted before the notified cutoff. Admit cards will be generated digitally through the university student login portal."
       },
       {
         id: 2,
         category: "scholarship",
         category_label: "Scholarship & Admin",
         title: "Dr. Ambedkar Post-Matric Scholarship Scheme for SC/ST/OBC Students (Verification Active)",
-        date: "Admissions Cell",
+        date: "Admissions Welfare Cell",
         ref_no: "SGI/SCH/2026/041",
         authority: "Welfare & Scholarship Nodal Cell, SGI Campus",
         badge: "Govt Scholarship",
         badge_class: "badge-scholar",
         summary: "Mandatory biometric and document verification for state scholarship recipients.",
-        details: "Eligible SC/ST/OBC scholarship recipients must submit their income certificate and Aadhaar linkage verification to the main office."
+        details: "All registered students eligible under the Punjab State Post-Matric Scholarship Scheme (PMS) for SC/ST/OBC categories are instructed to verify their Aadhaar linkage with active bank accounts and submit physical copies of income certificates, domicile, and academic marksheets to the campus administrative desk to ensure fee reimbursement processing."
       },
       {
         id: 3,
@@ -346,7 +328,7 @@ async function initNoticeBoard() {
         badge: "PCI Council",
         badge_class: "badge-pharma",
         summary: "4th Year B.Pharm and Final Year D.Pharm hospital training postings announced.",
-        details: "Clinical hospital postings for pharmacy graduates will start next week in the affiliated civil hospitals."
+        details: "Pursuant to Pharmacy Council of India guidelines, clinical pharmaceutical training rotations at affiliated district civil hospitals and multi-specialty healthcare networks will commence as scheduled. Students must maintain their certified pharmacovigilance and drug formulation logbooks under the supervision of designated clinical preceptors."
       },
       {
         id: 4,
@@ -359,7 +341,7 @@ async function initNoticeBoard() {
         badge: "Nursing Board",
         badge_class: "badge-nursing",
         summary: "Clinical hospital postings in ICU, Pediatrics, and Community Health for B.Sc & GNM cohorts.",
-        details: "All student nurses must report in clinical uniform with valid institutional ID cards."
+        details: "The clinical rotation roster for the academic term has been approved by the nursing faculty board in compliance with PNRC Chandigarh and INC guidelines. Clinical duty uniforms, institutional identity cards, and procedural logs must be carried daily. Absences without prior permission from the Nursing Superintendent will attract disciplinary review."
       }
     ];
   }
@@ -403,9 +385,14 @@ function renderNoticesFeed(category) {
       <p class="notice-snippet-text">${item.summary}</p>
       <div class="notice-footer-row">
         <span class="notice-authority-label">${item.authority}</span>
-        <button class="notice-read-more-btn" onclick="event.stopPropagation(); openNoticeModal(${item.id})">
-          Read Details &rarr;
-        </button>
+        <div class="notice-action-btns">
+          <button class="notice-quick-pdf-btn" onclick="event.stopPropagation(); downloadNoticePDF(${item.id})">
+            📄 PDF
+          </button>
+          <button class="notice-read-more-btn" onclick="event.stopPropagation(); openNoticeModal(${item.id})">
+            Read Details &rarr;
+          </button>
+        </div>
       </div>
     </div>
   `).join('');
@@ -419,6 +406,8 @@ function renderNoticesFeed(category) {
 function openNoticeModal(noticeId) {
   const notice = loadedNotices.find(n => n.id === noticeId);
   if (!notice) return;
+
+  currentActiveNotice = notice;
 
   const modal = document.getElementById('noticeModal');
   const badgeEl = document.getElementById('modalNoticeBadge');
@@ -445,7 +434,287 @@ function closeNoticeModal() {
 }
 
 /* ========================================================
-   10. APPLICATION MODAL
+   10. REAL PDF GENERATOR ENGINE (Circulars & Prospectus)
+   ======================================================== */
+function downloadCurrentNoticePDF() {
+  if (currentActiveNotice) {
+    downloadNoticePDF(currentActiveNotice.id);
+  } else if (loadedNotices.length > 0) {
+    downloadNoticePDF(loadedNotices[0].id);
+  }
+}
+
+function downloadNoticePDF(noticeId) {
+  const notice = loadedNotices.find(n => n.id === noticeId);
+  if (!notice) return;
+
+  // Check if jsPDF library is loaded
+  if (window.jspdf && window.jspdf.jsPDF) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+
+    // 1. Header Banner & Branding
+    doc.setFillColor(17, 20, 24); // #111418
+    doc.rect(0, 0, pageWidth, 28, 'F');
+
+    doc.setTextColor(229, 169, 16); // Collegiate Mustard #e5a910
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('SUKHJINDER GROUP OF INSTITUTES', margin, 12);
+
+    doc.setTextColor(200, 210, 220);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.text('Approved by AICTE, PCI & INC New Delhi • Affiliated to IKGPTU Jalandhar & PSBTE', margin, 18);
+    doc.text('V.P.O. Hayat Nagar, Hardochhanni Road, Gurdaspur, Punjab – 143521 | Helpline: 93160 93494', margin, 23);
+
+    // Decorative Mustard Line
+    doc.setDrawColor(229, 169, 16);
+    doc.setLineWidth(1);
+    doc.line(0, 28, pageWidth, 28);
+
+    // 2. Reference & Date Line
+    let y = 38;
+    doc.setTextColor(60, 65, 75);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.5);
+    doc.text(`REF NO: ${notice.ref_no || 'SGI/ACAD/2026/01'}`, margin, y);
+
+    const dateStr = `DATE: ${notice.date || 'Active Session'}`;
+    const dateWidth = doc.getTextWidth(dateStr);
+    doc.text(dateStr, pageWidth - margin - dateWidth, y);
+
+    y += 8;
+    doc.setDrawColor(220, 225, 230);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageWidth - margin, y);
+
+    // 3. Department & Category Badge
+    y += 10;
+    doc.setFillColor(245, 240, 225);
+    doc.roundedRect(margin, y - 5, 65, 8, 2, 2, 'F');
+    doc.setTextColor(180, 110, 5);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(`[ ${notice.badge || notice.category_label || 'OFFICIAL CIRCULAR'} ]`, margin + 3, y);
+
+    // 4. Circular Subject / Title
+    y += 12;
+    doc.setTextColor(17, 20, 24);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    const splitTitle = doc.splitTextToSize(`SUBJECT: ${notice.title}`, contentWidth);
+    doc.text(splitTitle, margin, y);
+    y += (splitTitle.length * 6) + 4;
+
+    // 5. Official Description Body
+    doc.setTextColor(50, 55, 65);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10.5);
+    doc.setLineHeightFactor(1.5);
+
+    const fullDetails = `${notice.details}\n\nAll concerned students, faculty members, and administrative divisions are directed to take note of the above guidelines and ensure strict compliance. For further clarifications, please reach out to the undersigned administrative authority during working hours.`;
+    const splitBody = doc.splitTextToSize(fullDetails, contentWidth);
+    doc.text(splitBody, margin, y);
+
+    // 6. Sign-off and Authority Seal Block
+    y += (splitBody.length * 5.5) + 20;
+
+    // Push signature to safe position if near page bottom
+    if (y > 240) {
+      doc.addPage();
+      y = 30;
+    }
+
+    doc.setTextColor(17, 20, 24);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('BY ORDER OF:', pageWidth - margin - 75, y);
+    y += 6;
+    doc.setFontSize(9.5);
+    doc.text(notice.authority || 'Competent Authority', pageWidth - margin - 75, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.text('Sukhjinder Group of Institutes, Gurdaspur', pageWidth - margin - 75, y);
+
+    // 7. Official Authenticity Footer
+    doc.setDrawColor(220, 225, 230);
+    doc.setLineWidth(0.3);
+    doc.line(margin, 280, pageWidth - margin, 280);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(130, 135, 145);
+    doc.text('This is an authorized official digital document issued by Sukhjinder Group of Institutes, Punjab.', margin, 285);
+    doc.text('Verify online at https://sgigurdaspur.org | Helpline: +91 93160 93494', margin, 289);
+
+    // Trigger Download
+    const cleanFilename = `SGI_Circular_${(notice.ref_no || 'Notice').replace(/[\/\\]/g, '_')}.pdf`;
+    doc.save(cleanFilename);
+
+  } else {
+    // Fallback printable view if jsPDF CDN is blocked
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${notice.title}</title>
+          <style>
+            body { font-family: 'Helvetica', Arial, sans-serif; padding: 40px; color: #111; max-width: 800px; margin: 0 auto; line-height: 1.6; }
+            .header { border-bottom: 2px solid #e5a910; padding-bottom: 15px; margin-bottom: 25px; }
+            h1 { font-size: 20px; margin: 0; color: #111; }
+            .sub { font-size: 11px; color: #555; margin-top: 4px; }
+            .ref { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; margin: 20px 0; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+            .title { font-size: 15px; font-weight: bold; margin: 20px 0 12px; }
+            .body { font-size: 13px; color: #333; white-space: pre-line; }
+            .sign { margin-top: 50px; text-align: right; }
+          </style>
+        </head>
+        <body onload="window.print();">
+          <div class="header">
+            <h1>SUKHJINDER GROUP OF INSTITUTES</h1>
+            <div class="sub">Approved by AICTE, PCI & INC New Delhi • Affiliated to IKGPTU Jalandhar</div>
+            <div class="sub">V.P.O. Hayat Nagar, Hardochhanni Road, Gurdaspur, Punjab – 143521</div>
+          </div>
+          <div class="ref">
+            <div>REF: ${notice.ref_no || 'SGI/ACAD/2026'}</div>
+            <div>DATE: ${notice.date}</div>
+          </div>
+          <div class="title">SUBJECT: ${notice.title}</div>
+          <div class="body">${notice.details || notice.summary}</div>
+          <div class="sign">
+            <strong>${notice.authority || 'Academic Administration'}</strong><br>
+            Sukhjinder Group of Institutes
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+}
+
+// Generates the Official 2026–27 Institutional Prospectus PDF
+function downloadProspectusPDF() {
+  if (window.jspdf && window.jspdf.jsPDF) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+
+    // Cover Title Bar
+    doc.setFillColor(17, 20, 24);
+    doc.rect(0, 0, pageWidth, 45, 'F');
+
+    doc.setTextColor(229, 169, 16);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.text('SUKHJINDER GROUP OF INSTITUTES', margin, 18);
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(11);
+    doc.text('INFORMATION PROSPECTUS & ADMISSION DIRECTORY', margin, 27);
+
+    doc.setTextColor(180, 190, 200);
+    doc.setFontSize(8.5);
+    doc.text('Engineering • Pharmacy • Nursing • Management • Polytechnic Diploma', margin, 35);
+    doc.text('Session 2026–27 | Hayat Nagar Campus, Gurdaspur, Punjab', margin, 40);
+
+    // Decorative Bar
+    doc.setFillColor(229, 169, 16);
+    doc.rect(0, 45, pageWidth, 3, 'F');
+
+    let y = 60;
+    doc.setTextColor(17, 20, 24);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('1. ACCREDITATIONS & APPROVALS', margin, y);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    const accreditations = [
+      '• All India Council for Technical Education (AICTE), New Delhi',
+      '• Pharmacy Council of India (PCI), New Delhi',
+      '• Indian Nursing Council (INC) & Punjab Nurses Registration Council (PNRC)',
+      '• Affiliated to I.K. Gujral Punjab Technical University (IKGPTU), Jalandhar',
+      '• Punjab State Board of Technical Education & Industrial Training (PSBTE)'
+    ];
+    accreditations.forEach(acc => {
+      doc.text(acc, margin + 4, y);
+      y += 6;
+    });
+
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('2. APPROVED UNDERGRADUATE & POSTGRADUATE PROGRAMS', margin, y);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    const courses = [
+      '• B.Tech in Computer Science & Engineering (4 Years - AICTE / IKGPTU)',
+      '• B.Tech in Mechanical Engineering / Civil Engineering (4 Years)',
+      '• Bachelor of Pharmacy (B.Pharm - 4 Years / PCI Approved)',
+      '• Diploma in Pharmacy (D.Pharm - 2 Years)',
+      '• B.Sc Nursing & Post-Basic B.Sc Nursing (4 / 2 Years - INC & PNRC Approved)',
+      '• Master of Business Administration (MBA - 2 Years)',
+      '• Bachelor of Computer Applications (BCA) & BBA (3 Years)',
+      '• Polytechnic Engineering Diplomas (3 Years / PSBTE Approved)'
+    ];
+    courses.forEach(c => {
+      doc.text(c, margin + 4, y);
+      y += 6;
+    });
+
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text('3. SCHOLARSHIP & FINANCIAL ASSISTANCE SCHEMES', margin, y);
+
+    y += 8;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    const scholarships = [
+      '• Dr. Ambedkar Post-Matric Scholarship for SC/ST/OBC Students (Zero Tuition Fee)',
+      '• Prime Minister Special Scholarship Scheme (PMSSS) for J&K Candidates',
+      '• Merit-based Institutional Fee Waivers for 85%+ scorers in qualifying exams',
+      '• Special concessions for sports medalists and single-girl children'
+    ];
+    scholarships.forEach(s => {
+      doc.text(s, margin + 4, y);
+      y += 6;
+    });
+
+    y += 12;
+    doc.setFillColor(245, 245, 248);
+    doc.roundedRect(margin, y - 5, pageWidth - (margin * 2), 26, 3, 3, 'F');
+
+    doc.setTextColor(17, 20, 24);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('CENTRAL ADMISSIONS HELPLINE & PHYSICAL VERIFICATION DESK:', margin + 6, y + 2);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Campus Address: V.P.O. Hayat Nagar, Hardochhanni Road, Gurdaspur, Punjab – 143521', margin + 6, y + 9);
+    doc.text('Helpline Phone: +91 93160 93494 | Official Email: admin@sgigurdaspur.org', margin + 6, y + 16);
+
+    doc.save('SGI_Prospectus_Admissions_2026-27.pdf');
+  } else {
+    alert('Generating SGI Prospectus 2026–27... Please verify your connection.');
+  }
+}
+
+/* ========================================================
+   11. APPLICATION MODAL LOGIC
    ======================================================== */
 function openModal() {
   const modal = document.getElementById('appModal');
@@ -467,7 +736,7 @@ window.addEventListener('click', (e) => {
 });
 
 /* ========================================================
-   11. LEAD FORM INTEGRATION WITH BACKEND API
+   12. LEAD FORM INTEGRATION WITH BACKEND API
    ======================================================== */
 function initLeadForm() {
   const leadForm = document.getElementById('leadForm');
