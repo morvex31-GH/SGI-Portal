@@ -1,6 +1,8 @@
-/* --- THEME SYSTEM & VARIABLES --- */
+/* ========================================================
+   1. THEME DESIGN SYSTEM & CUSTOM PROPERTIES
+   ======================================================== */
 :root {
-  /* Default: Dark Mode */
+  /* Default: Dark Obsidian Mode */
   --bg-dark: #0a0c10;
   --bg-card: rgba(22, 27, 34, 0.72);
   --bg-card-border: rgba(255, 255, 255, 0.08);
@@ -11,7 +13,7 @@
   --accent-primary: #e5a910;       /* Rich Yellowish Mustard */
   --accent-hover: #c98e04;
   --accent-glow: rgba(229, 169, 16, 0.35);
-  --btn-primary-text: #111418;     /* Contrast dark text on mustard button */
+  --btn-primary-text: #111418;     /* High-contrast dark text on mustard */
 
   --text-main: #f0f6fc;
   --text-muted: #8b949e;
@@ -35,7 +37,7 @@
     --bg-card-hover: rgba(255, 255, 255, 1);
     --header-bg: rgba(248, 250, 252, 0.88);
 
-    --accent-primary: #d49504;
+    --accent-primary: #d49504;     /* Deepened mustard for light surfaces */
     --accent-hover: #b88002;
     --accent-glow: rgba(212, 149, 4, 0.25);
     --btn-primary-text: #0f172a;
@@ -65,7 +67,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Tactile Grain Overlay */
+/* ========================================================
+   2. TACTILE OVERLAYS & CUSTOM CURSOR
+   ======================================================== */
 .noise-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -76,7 +80,6 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* Custom Cursor (Auto-disabled on mobile touch devices) */
 .custom-cursor {
   width: 24px;
   height: 24px;
@@ -89,11 +92,14 @@ body {
   z-index: 3000;
 }
 
+/* Disable magnetic cursor on mobile/touch screens to avoid lag */
 @media (hover: none) and (pointer: coarse) {
   .custom-cursor { display: none !important; }
 }
 
-/* --- HEADER --- */
+/* ========================================================
+   3. STICKY HEADER & DESKTOP NAVIGATION
+   ======================================================== */
 .site-header {
   position: fixed;
   top: 0; left: 0; width: 100%;
@@ -182,7 +188,7 @@ body {
   align-items: center;
 }
 
-/* Mobile Hamburger Button */
+/* Hamburger Toggle Button (Desktop: Hidden) */
 .mobile-menu-toggle {
   display: none;
   background: rgba(125, 125, 125, 0.08);
@@ -202,7 +208,9 @@ body {
   transition: all 0.25s ease;
 }
 
-/* --- MOBILE NAVIGATION DRAWER --- */
+/* ========================================================
+   4. MOBILE NAVIGATION DRAWER
+   ======================================================== */
 .mobile-nav-drawer {
   position: fixed;
   top: 0; left: 0;
@@ -305,7 +313,9 @@ body {
   padding-top: 1.2rem;
 }
 
-/* --- BUTTONS (MUSTARD YELLOW THEMED) --- */
+/* ========================================================
+   5. BUTTON STYLES (MUSTARD THEMED)
+   ======================================================== */
 .btn {
   font-family: var(--font-body);
   font-weight: 700;
@@ -370,7 +380,9 @@ body {
   justify-content: center; 
 }
 
-/* --- SPA PAGE VIEWS & TRANSITIONS --- */
+/* ========================================================
+   6. SPA PAGE VIEWS & TRANSITIONS
+   ======================================================== */
 .page-view {
   display: none;
   opacity: 0;
@@ -388,7 +400,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Inner Page Header */
 .page-header {
   padding: 8.5rem 2rem 2.5rem;
   text-align: center;
@@ -410,7 +421,9 @@ body {
   line-height: 1.6;
 }
 
-/* --- HERO SECTION WITH CAMPUS IMAGE --- */
+/* ========================================================
+   7. HERO SECTION & CALIBRATED CAMPUS BACKGROUND
+   ======================================================== */
 .hero-section {
   position: relative;
   min-height: 85vh;
@@ -487,7 +500,9 @@ body {
   flex-wrap: wrap;
 }
 
-/* --- BENTO GRID LAYOUT --- */
+/* ========================================================
+   8. BENTO GRID ARCHITECTURE & ASYMMETRIC SPANS
+   ======================================================== */
 .section-container {
   max-width: 1300px;
   margin: 3.5rem auto 5rem;
@@ -573,11 +588,84 @@ body {
   font-size: 1rem;
 }
 
-/* --- ACCREDITATION BADGE LINKS (CENTERED & BOX FIT) --- */
+/* ========================================================
+   9. BENTO PHOTO SHOWCASE & CAMPUS BLURRED BACKDROP
+   ======================================================== */
+.bento-photo-card {
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+  border-radius: var(--radius-lg);
+  min-height: 330px;
+}
+
+.bento-bg-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+.bento-photo-card:hover .bento-bg-photo { transform: scale(1.06); }
+
+.bento-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 16, 0.2) 0%, rgba(10, 12, 16, 0.88) 85%);
+  z-index: 1;
+}
+
+@media (prefers-color-scheme: light) {
+  .bento-photo-overlay {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.85) 90%);
+  }
+}
+
+.bento-photo-content {
+  position: relative;
+  z-index: 2;
+  padding: 2.2rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.card-tag-badge {
+  background: var(--accent-primary) !important;
+  color: var(--btn-primary-text) !important;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 800;
+  width: fit-content;
+  margin-bottom: 0.8rem;
+}
+
+/* Campus Section Blurred Backdrop */
+.campus-backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(10, 12, 16, 0.6) 0%, rgba(10, 12, 16, 0.94) 100%);
+}
+
+@media (prefers-color-scheme: light) {
+  .campus-backdrop-overlay {
+    background: radial-gradient(circle at center, rgba(248, 250, 252, 0.72) 0%, rgba(248, 250, 252, 0.94) 100%);
+  }
+}
+
+/* ========================================================
+   10. ACCREDITATIONS & REGULATORY TILES (BENTO 3)
+   ======================================================== */
 .bento-accreditations-card {
   display: flex;
   flex-direction: column;
-  justify-content: center !important;
+  justify-content: center !important; /* Centers content vertically in box */
   gap: 0.75rem;
   padding: 1.8rem 1.6rem !important;
   height: 100%;
@@ -672,7 +760,9 @@ body {
   transform: translate(2px, -2px);
 }
 
-/* --- NOTICE BOARD SCROLLABLE FEED & FILTERS --- */
+/* ========================================================
+   11. NOTICE BOARD SCROLLABLE FEED & FILTERS (BENTO 4)
+   ======================================================== */
 .bento-notice-hub {
   padding: 2rem;
 }
@@ -729,6 +819,7 @@ body {
   border-color: var(--accent-primary);
 }
 
+/* Scrollable Notice Container with Webkit Scrollbar */
 .notices-scroll-feed {
   display: flex;
   flex-direction: column;
@@ -792,9 +883,37 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-top: 0.2rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .notice-authority-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+
+.notice-action-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.notice-quick-pdf-btn {
+  background: rgba(229, 169, 16, 0.12);
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.notice-quick-pdf-btn:hover {
+  background: var(--accent-primary);
+  color: #111418;
+}
 
 .notice-read-more-btn {
   background: transparent;
@@ -820,7 +939,7 @@ body {
 
 .notice-feed-hint { font-size: 0.78rem; color: var(--text-muted); }
 
-/* Notice Details Expanded Modal */
+/* Notice Expanded Modal */
 .modal-notice-expanded { max-width: 680px; }
 .notice-modal-header { display: flex; align-items: center; gap: 0.8rem; }
 .notice-modal-date { font-size: 0.82rem; color: var(--text-muted); }
@@ -828,76 +947,9 @@ body {
 .notice-modal-body p { line-height: 1.8; font-size: 0.98rem; color: var(--text-main); }
 .notice-modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; border-top: 1px solid var(--bg-card-border); padding-top: 1.2rem; }
 
-/* --- BENTO PHOTO CARD (PHOTO SHOWCASE) --- */
-.bento-photo-card {
-  position: relative;
-  overflow: hidden;
-  padding: 0 !important;
-  border-radius: var(--radius-lg);
-  min-height: 330px;
-}
-
-.bento-bg-photo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 0;
-}
-
-.bento-photo-card:hover .bento-bg-photo { transform: scale(1.06); }
-
-.bento-photo-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 16, 0.2) 0%, rgba(10, 12, 16, 0.88) 85%);
-  z-index: 1;
-}
-
-@media (prefers-color-scheme: light) {
-  .bento-photo-overlay {
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.15) 0%, rgba(15, 23, 42, 0.85) 90%);
-  }
-}
-
-.bento-photo-content {
-  position: relative;
-  z-index: 2;
-  padding: 2.2rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.card-tag-badge {
-  background: var(--accent-primary) !important;
-  color: var(--btn-primary-text) !important;
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-weight: 800;
-  width: fit-content;
-  margin-bottom: 0.8rem;
-}
-
-/* --- CAMPUS SECTION BLURRED BACKDROP --- */
-.campus-backdrop-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(10, 12, 16, 0.6) 0%, rgba(10, 12, 16, 0.94) 100%);
-}
-
-@media (prefers-color-scheme: light) {
-  .campus-backdrop-overlay {
-    background: radial-gradient(circle at center, rgba(248, 250, 252, 0.72) 0%, rgba(248, 250, 252, 0.94) 100%);
-  }
-}
-
-/* --- FILTER CONTROLS & COURSE CARDS --- */
+/* ========================================================
+   12. INSTITUTES FILTER CONTROLS & COURSE TILES
+   ======================================================== */
 .filter-wrapper {
   display: flex;
   justify-content: center;
@@ -981,7 +1033,9 @@ body {
   font-weight: 700;
 }
 
-/* --- RECRUITERS GRID & LINKS --- */
+/* ========================================================
+   13. RECRUITERS GRID (ALUMNI EXTERNAL LINKS)
+   ======================================================== */
 .recruiters-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -1023,7 +1077,9 @@ body {
   transform: translate(2px, -2px);
 }
 
-/* --- CTA BANNER --- */
+/* ========================================================
+   14. CTA BANNER
+   ======================================================== */
 .cta-banner {
   background: linear-gradient(135deg, rgba(229, 169, 16, 0.15), rgba(121, 40, 202, 0.08));
   border: 1px solid var(--accent-primary);
@@ -1042,7 +1098,9 @@ body {
   letter-spacing: -1px;
 }
 
-/* --- MODAL POPUP --- */
+/* ========================================================
+   15. APPLICATION MODAL & FORM CONTROLS
+   ======================================================== */
 .modal-backdrop {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -1108,7 +1166,9 @@ body {
 
 select option { background-color: #ffffff !important; color: #111827 !important; }
 
-/* --- FOOTER & COMPLIANCE MATRIX --- */
+/* ========================================================
+   16. FOOTER & COMPLIANCE MATRIX (NO ADMIN TRACE)
+   ======================================================== */
 .site-footer {
   border-top: 1px solid var(--bg-card-border);
   padding: 4rem 2rem 2rem;
@@ -1166,7 +1226,7 @@ select option { background-color: #ffffff !important; color: #111827 !important;
 }
 
 /* ========================================================
-   RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
+   17. RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
    ======================================================== */
 @media (max-width: 992px) {
   /* Header adjustments */
