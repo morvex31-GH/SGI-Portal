@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGI Gurdaspur | Sukhjinder Group of Institutes</title>
+  
+  <!-- Fonts: Syne (Display) & Plus Jakarta Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- jsPDF Engine for Direct Circular & Prospectus Downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- GSAP (GreenSock) for logo animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css?v=20261124">
+</head>
+<body>
+  <!-- Logo Preloader (GSAP): logo scales in at center, then glides into the navbar -->
+  <div class="logo-preloader" id="logoPreloader" aria-hidden="true">
+    <div class="preloader-bg"></div>
+    <div class="preloader-aura"></div>
+    <img class="preloader-logo" id="preloaderLogoImg" src="my-logo.png" alt="">
+    <span class="preloader-logo is-badge" id="preloaderLogoBadge" style="display:none;">SGI</span>
+  </div>
+
+  <!-- Ambient Noise Texture -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Magnetic Custom Cursor -->
+  <div class="custom-cursor" id="cursor"></div>
+
+  <!-- Sticky Frosted Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#home" class="brand-logo route-link" data-route="home">
+        <img src="my-logo.png" alt="SGI Logo" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoBadge').style.display='inline-flex';">
+        <span class="logo-badge-mini" id="fallbackLogoBadge" style="display:none;">SGI</span>
+        <div class="brand-titles">
+          <span class="logo-text">SGI GURDASPUR</span>
+          <span class="logo-subtext">SUKHJINDER GROUP OF INSTITUTES</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="nav-links">
+        <a href="#home" class="nav-item route-link active" data-route="home">Home</a>
+        <a href="#about" class="nav-item route-link" data-route="about">About</a>
+        <a href="#programs" class="nav-item route-link" data-route="programs">Degree Programs</a>
+        <a href="#placements" class="nav-item route-link" data-route="placements">Placements</a>
+        <a href="#campus" class="nav-item route-link" data-route="campus">Campus</a>
+        <a href="#contact" class="nav-item route-link" data-route="contact">Contact Desk</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a href="tel:9316093494" id="dynHeaderCall" class="btn btn-secondary header-call-btn magnetic-btn">Call: 93160 93494</a>
+        <button class="btn btn-primary header-apply-btn magnetic-btn" onclick="openModal()">Apply Now</button>
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open mobile navigation menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Slide-In Navigation Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer" aria-hidden="true">
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+    <div class="mobile-nav-inner">
+      <div class="mobile-nav-top">
+        <div class="brand-logo">
+          <span class="logo-badge-mini">SGI</span>
+          <span class="logo-text" style="font-size:1.05rem;">Sukhjinder Group</span>
+        </div>
+        <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close menu">&times;</button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="#home" class="mobile-nav-item route-link active" data-route="home">
+          <span>Home</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+        <a href="#about" class="mobile-nav-item route-link" data-route="about">
+          <span>About SGI Legacy</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+        <a href="#programs" class="mobile-nav-item route-link" data-route="programs">
+          <span>Degree Programs</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+        <a href="#placements" class="mobile-nav-item route-link" data-route="placements">
+          <span>Placements</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+        <a href="#campus" class="mobile-nav-item route-link" data-route="campus">
+          <span>Campus &amp; Facilities</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+        <a href="#contact" class="mobile-nav-item route-link" data-route="contact">
+          <span>Inquiry &amp; Contact Desk</span>
+          <span class="m-arrow">&rarr;</span>
+        </a>
+      </nav>
+
+      <div class="mobile-nav-bottom">
+        <a href="tel:9316093494" id="dynMobileCall" class="btn btn-secondary btn-block" style="margin-bottom:0.8rem; font-size:0.9rem;">
+          📞 Helpline: 93160 93494
+        </a>
+        <button class="btn btn-primary btn-block" onclick="openModal(); closeMobileNav();">
+          Apply for <span class="dynamic-session">2026–27</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main id="app-container">
+
+    <!-- ==================== 1. HOME VIEW (FULL SCROLLABLE LANDING PAGE) ==================== -->
+    <section class="page-view active" id="view-home">
+      <!-- Hero Section with Slow Smooth Crossfade Slideshow (6.5s interval, 1.4s transition) -->
+      <div class="hero-section">
+        <div class="hero-slideshow-container" id="heroSlideshow">
+          <!-- Slide 1: Panoramic Aerial Campus -->
+          <div class="hero-slide active">
+            <img src="campus-hero.jpeg" onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='campus-hero.jpg';}else{this.src='https://sgigurdaspur.org/wp-content/uploads/2026/01/SukhJinder-Group-of-Institutes.jpg';}" alt="SGI Gurdaspur Aerial Campus View" class="hero-bg-img">
+          </div>
+          <!-- Slide 2: Wing B Academic Block & Gardens -->
+          <div class="hero-slide">
+            <img src="campus-wing-b.jpeg" onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='campus-wing-b.jpg';}else{this.src='https://sgigurdaspur.org/wp-content/uploads/2026/01/SukhJinder-Group-of-Institutes.jpg';}" alt="SGI Wing B Academic Block" class="hero-bg-img">
+          </div>
+          <div class="hero-overlay"></div>
+        </div>
+
+        <canvas id="hero-canvas"></canvas>
+
+        <div class="hero-content">
+          <div class="hero-pill">
+            <span class="pulse-dot"></span> <span id="dynHeroPill">AICTE • IKGPTU • PCI • INC • BFUHS Approved • Punjab</span>
+          </div>
+          
+          <h1 class="hero-title">
+            <span class="hashtag-highlight" id="dynHeroTitleHighlight">#Push Beyond</span> <span id="dynHeroTitleRest">Boundaries</span>
+          </h1>
+
+          <h2 class="hero-subheadline" id="dynHeroSubheadline">
+            Where Learning Meets Lifestyle
+          </h2>
+
+          <p class="hero-subtitle" id="dynHeroSubtitle">
+            Pioneering higher education across Engineering, Pharmacy, Nursing, Allied Health, Computer Applications &amp; Management on a lush 10+ acre campus in Gurdaspur.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-large magnetic-btn" onclick="openModal()">
+              Start Application <span class="dynamic-session">2026–27</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <button onclick="downloadProspectusPDF()" class="btn btn-glass btn-large magnetic-btn">
+              Download Prospectus (PDF)
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </button>
+          </div>
+
+          <!-- Subtle Slideshow Progress Indicators -->
+          <div class="hero-slide-indicators" aria-label="Hero background slide indicators">
+            <button type="button" class="hero-indicator active" data-slide="0" aria-label="View Campus Aerial Slide"></button>
+            <button type="button" class="hero-indicator" data-slide="1" aria-label="View Academic Block Slide"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- National-Level Highlights & Legacy Banner -->
+      <section class="national-highlights-ribbon">
+        <div class="highlights-inner">
+          <div class="highlight-item">
+            <span class="highlight-stat" id="dynStatYears">25+</span>
+            <div class="highlight-meta">
+              <strong id="dynStatYearsTitle">Years of Academic Excellence</strong>
+              <small id="dynStatYearsSub">Est. under S. Sukhjinder Singh Memorial Education Society</small>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-stat" id="dynStatAlumni">500,000+</span>
+            <div class="highlight-meta">
+              <strong id="dynStatAlumniTitle">Global SGI Alumni &amp; Community</strong>
+              <small id="dynStatAlumniSub">Thriving across India, Canada, UK, USA &amp; Australia</small>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-stat" id="dynStatStudents">3,000+</span>
+            <div class="highlight-meta">
+              <strong id="dynStatStudentsTitle">International &amp; Out-of-State Students</strong>
+              <small id="dynStatStudentsSub">Punjab, Himachal Pradesh, J&amp;K, Ladakh &amp; Global Cohorts</small>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-stat" id="dynStatTieups">150+</span>
+            <div class="highlight-meta">
+              <strong id="dynStatTieupsTitle">Programs &amp; 200+ Industry Tie-Ups</strong>
+              <small id="dynStatTieupsSub">Multi-disciplinary UG, PG &amp; Diplomas with Fortune 500 links</small>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-stat" id="dynStatAwards">Awarded</span>
+            <div class="highlight-meta">
+              <strong id="dynStatAwardsTitle">National Education Awards</strong>
+              <small id="dynStatAwardsSub">Merit scholarships for Punjab, HP, J&amp;K &amp; SC/ST students</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Home Bento Grid: Accreditations + Flagship Academics + Notice Board -->
+      <div class="section-container">
+        <div class="section-header">
+          <span class="section-eyebrow">Academic Ecosystem</span>
+          <h2 class="section-heading">Built Modular. Engineered for Success.</h2>
+        </div>
+
+        <div class="bento-grid">
+          <!-- Bento 1: Authentic Accreditations with Recognizable Council Emblems -->
+          <div class="bento-card bento-span-3 bento-accreditations-full">
+            <div class="accreditations-head-group">
+              <span class="card-tag">Accreditations &amp; Statutory Approvals</span>
+              <h3 class="accreditations-heading">Recognized by Apex National &amp; State Regulatory Councils</h3>
+              <p class="bento-desc">All degrees, diplomas, and clinical curricula conform strictly with central regulatory councils and state university standards.</p>
+            </div>
+            
+            <div class="regulatory-emblems-grid">
+              <!-- AICTE -->
+              <a href="https://www.aicte-india.org/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <circle cx="40" cy="40" r="35" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="4 2"/>
+                    <circle cx="40" cy="40" r="28" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2"/>
+                    <path d="M40 16l4 7 7-3-1 8 8 2-5 6 5 6-8 2 1 8-7-3-4 7-4-7-7 3 1-8-8-2 5-6-5-6 8-2-1-8 7 3z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    <circle cx="40" cy="40" r="10" fill="#0B2545" stroke="currentColor" stroke-width="1.8"/>
+                    <text x="40" y="43" text-anchor="middle" font-size="7.5" font-weight="800" fill="currentColor" font-family="sans-serif">AICTE</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>AICTE New Delhi</strong>
+                  <small>All India Council for Technical Education</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+
+              <!-- IKGPTU -->
+              <a href="https://ptu.ac.in/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <path d="M40 8L66 19v19c0 17-11 29-26 34C25 67 14 55 14 38V19L40 8z" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2.2"/>
+                    <path d="M25 32c5-3 10-3 15 0 5-3 10-3 15 0v17c-5-3-10-3-15 0-5-3-10-3-15 0V32z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <line x1="40" y1="32" x2="40" y2="49" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="40" cy="22" r="3.5" fill="currentColor"/>
+                    <text x="40" y="61" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" font-family="sans-serif">IKGPTU</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>IKGPTU Jalandhar</strong>
+                  <small>I.K. Gujral Punjab Technical University</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+
+              <!-- PCI -->
+              <a href="https://www.pci.nic.in/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <circle cx="40" cy="40" r="34" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2.2"/>
+                    <path d="M27 28h26c-1 10-7 15-13 15s-12-5-13-15z" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <line x1="40" y1="43" x2="40" y2="55" stroke="currentColor" stroke-width="2.2"/>
+                    <line x1="31" y1="55" x2="49" y2="55" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    <path d="M36 25c0-5 8-5 8 0s-8 7-4 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    <text x="40" y="66" text-anchor="middle" font-size="7.5" font-weight="800" fill="currentColor" font-family="sans-serif">PCI</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>PCI New Delhi</strong>
+                  <small>Pharmacy Council of India (B.Pharm / D.Pharm)</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+
+              <!-- INC -->
+              <a href="https://indiannursingcouncil.org/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <circle cx="40" cy="40" r="34" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2.2"/>
+                    <path d="M23 42c6 4 21 4 27 0l5-4-6-3H26l-3 7z" fill="none" stroke="currentColor" stroke-width="1.9"/>
+                    <path d="M55 34c2-4 0-8-3-8-2 0-3 3-1 5" fill="currentColor"/>
+                    <path d="M36 18h8v6h6v8h-6v6h-8v-6h-6v-8h6z" fill="none" stroke="currentColor" stroke-width="1.6"/>
+                    <text x="40" y="61" text-anchor="middle" font-size="7.5" font-weight="800" fill="currentColor" font-family="sans-serif">INC</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>INC &amp; PNRC</strong>
+                  <small>Indian Nursing Council &amp; Punjab Nurses Reg.</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+
+              <!-- BFUHS -->
+              <a href="https://bfuhs.ac.in/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <polygon points="40,8 68,24 68,56 40,72 12,56 12,24" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2.2"/>
+                    <line x1="40" y1="20" x2="40" y2="52" stroke="currentColor" stroke-width="2.2"/>
+                    <path d="M29 25c6 3 16 3 22 0M32 34c5 4 11 4 16 0M34 43c4 3 8 3 12 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                    <circle cx="40" cy="20" r="3" fill="currentColor"/>
+                    <text x="40" y="63" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" font-family="sans-serif">BFUHS</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>BFUHS Faridkot</strong>
+                  <small>Baba Farid University of Health Sciences</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+
+              <!-- PSBTE & IT -->
+              <a href="https://www.punjabteched.com/" target="_blank" rel="noopener noreferrer" class="emblem-card">
+                <div class="emblem-icon-wrap" aria-hidden="true">
+                  <svg viewBox="0 0 80 80" class="council-svg-emblem">
+                    <circle cx="40" cy="40" r="34" fill="rgba(244,180,0,0.12)" stroke="currentColor" stroke-width="2.2"/>
+                    <circle cx="40" cy="36" r="15" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 3"/>
+                    <path d="M40 21l-9 24M40 21l9 24M33 38h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <text x="40" y="61" text-anchor="middle" font-size="6.8" font-weight="800" fill="currentColor" font-family="sans-serif">PSBTE &amp; IT</text>
+                  </svg>
+                </div>
+                <div class="emblem-info">
+                  <strong>PSBTE &amp; IT Chandigarh</strong>
+                  <small>Punjab State Board of Technical Education</small>
+                </div>
+                <span class="emblem-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Bento 2: Featured Degree Programs Overview -->
+          <div class="bento-card bento-span-1">
+            <div>
+              <div class="card-tag">Flagship Academics</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-top:0.4rem;">Degree Programs</h3>
+              <p class="bento-desc">Industry-aligned undergraduate and postgraduate degrees structured with modern lab internships and university-approved credits.</p>
+              <ul class="program-quick-pills">
+                <li>B.Tech (CSE / ME / Civil)</li>
+                <li>B.Pharmacy &amp; D.Pharmacy</li>
+                <li>B.Sc. Nursing &amp; MLS</li>
+                <li>BCA • B.Sc. CS • B.Voc</li>
+                <li>BBA • B.Com (Hons) • MBA</li>
+              </ul>
+            </div>
+            <div style="margin-top: 1.5rem;">
+              <a href="#programs" class="btn btn-primary btn-block route-link" data-route="programs">Explore All Programs &rarr;</a>
+            </div>
+          </div>
+
+          <!-- Bento 3: Interactive Notice Board -->
+          <div class="bento-card bento-span-2 bento-notice-hub" id="noticeHubCard">
+            <div class="bento-header-flex">
+              <div>
+                <div class="card-tag">Live Circulars &amp; Announcements</div>
+                <h3 style="font-family: var(--font-display); font-size: 1.6rem; letter-spacing: -0.5px;">Campus Notice Board</h3>
+              </div>
+              <span class="status-live-pill"><span class="pulse-dot"></span> Live Portal Feed</span>
+            </div>
+
+            <div class="notice-filters-bar">
+              <button class="notice-filter-chip active" data-notice-filter="all">All Notices</button>
+              <button class="notice-filter-chip" data-notice-filter="ikgptu">IKGPTU</button>
+              <button class="notice-filter-chip" data-notice-filter="pharma">Pharmacy (PCI)</button>
+              <button class="notice-filter-chip" data-notice-filter="nursing">Nursing (INC)</button>
+              <button class="notice-filter-chip" data-notice-filter="scholarship">Scholarships &amp; Admin</button>
+              <button class="notice-filter-chip" data-notice-filter="career">Placements</button>
+            </div>
+
+            <div class="notices-scroll-feed" id="noticesContainer">
+              <div class="notices-loading-text">Loading verified academic notifications...</div>
+            </div>
+
+            <div class="notice-bottom-actions">
+              <span class="notice-feed-hint">💡 Click "PDF" on any card to download the official circular PDF.</span>
+              <a href="#programs" class="btn btn-secondary btn-sm route-link" data-route="programs">
+                Browse Degree Curriculum &rarr;
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== HOME PREVIEW 1: ABOUT SGI & HERITAGE ==================== -->
+      <div class="section-container home-preview-section">
+        <div class="home-section-head">
+          <div>
+            <span class="section-eyebrow">About SGI Legacy</span>
+            <h2 class="section-heading">Shivalik Foothills Heritage &amp; Inclusive Education</h2>
+          </div>
+          <a href="#about" class="btn btn-secondary route-link magnetic-btn" data-route="about">
+            Read Full Story &rarr;
+          </a>
+        </div>
+
+        <div class="bento-grid">
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag"><span data-cms="stat_years">25+</span> Years of Academic Impact</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.75rem; margin-bottom: 0.85rem;">Empowering Talent Across the Punjab–Himachal Belt</h3>
+              <p class="bento-desc" style="line-height: 1.75;">
+                Established under the <strong>S. Sukhjinder Singh Memorial Educational Society</strong> in Hayat Nagar, Gurdaspur, SGI brings together Engineering, Pharmacy, Nursing, Allied Health, Management, and Polytechnic institutions—serving <strong data-cms="stat_students">3,000+</strong> students from Punjab, Himachal Pradesh, J&amp;K, Ladakh, and international cohorts.
+              </p>
+
+              <div class="scholarship-pills-inline">
+                <span class="preview-chip">🎓 Zero Tuition Fee for Eligible SC/ST (PMS)</span>
+                <span class="preview-chip">🏔️ PMSSS Support for J&amp;K &amp; Ladakh Students</span>
+                <span class="preview-chip">🏆 Institutional Merit Scholarships</span>
+              </div>
+            </div>
+            <div style="margin-top: 1.4rem;">
+              <a href="#about" class="btn btn-primary route-link" data-route="about">Read Full Story &rarr;</a>
+            </div>
+          </div>
+
+          <div class="bento-card bento-span-1 bento-campus-life">
+            <div>
+              <div class="card-tag">Campus Life Highlight</div>
+              <h4 data-cms="campus_life_title" style="font-family: var(--font-display); font-size: 1.35rem; margin-bottom: 0.75rem;">Shivalik Hills Campus &amp; Holistic Growth</h4>
+              <div class="campus-life-img-container">
+                <img data-cms-src="campus_life_img" src="campus-wing-b.jpeg" onerror="this.src='campus-hero.jpeg'" alt="Shivalik Hills Campus at SGI Gurdaspur" class="campus-life-preview-img">
+                <div class="img-badge-overlay">🏔️ Hayat Nagar, Gurdaspur</div>
+                <div class="img-placeholder-caption" data-cms="campus_life_caption">Shivalik Foothills • Smart Labs &amp; Student Hub</div>
+              </div>
+              <p class="bento-desc" data-cms="campus_life_desc" style="font-size: 0.88rem; margin-top: 0.85rem; line-height: 1.6;">
+                Set amidst clean, green surroundings near the Shivalik Hills foothills, SGI combines smart digital classrooms, dedicated clinical nursing &amp; pharma simulation labs, cultural fests, and sports.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== HOME PREVIEW 2: DEGREE PROGRAMS ==================== -->
+      <div class="section-container home-preview-section">
+        <div class="home-section-head">
+          <div>
+            <span class="section-eyebrow">Academic Catalog</span>
+            <h2 class="section-heading">Featured Degree &amp; Diploma Streams</h2>
+          </div>
+          <a href="#programs" class="btn btn-primary route-link magnetic-btn" data-route="programs">
+            Explore All Programs &rarr;
+          </a>
+        </div>
+
+        <div class="home-programs-preview-grid">
+          <a href="#programs" class="preview-stream-card route-link" data-route="programs">
+            <span class="course-code">AICTE • IKGPTU</span>
+            <h4>Engineering &amp; Tech</h4>
+            <p>B.Tech in Computer Science (AI &amp; Cloud), Mechanical Engineering, Civil Engineering &amp; Polytechnic Diplomas.</p>
+            <span class="preview-stream-link">B.Tech / Diploma &rarr;</span>
+          </a>
+
+          <a href="#programs" class="preview-stream-card route-link" data-route="programs">
+            <span class="course-code">PCI • IKGPTU • PSBTE</span>
+            <h4>Pharmacy</h4>
+            <p>Bachelor of Pharmacy (B.Pharmacy - 4 Yrs) and Diploma in Pharmacy (D.Pharmacy - 2 Yrs) with clean-room labs.</p>
+            <span class="preview-stream-link">B.Pharm / D.Pharm &rarr;</span>
+          </a>
+
+          <a href="#programs" class="preview-stream-card route-link" data-route="programs">
+            <span class="course-code">INC • BFUHS • PNRC</span>
+            <h4>Nursing &amp; Allied Health</h4>
+            <p>B.Sc. Nursing (Basic), Post Basic B.Sc. Nursing, and B.Sc. Medical Lab Science (MLS) with hospital postings.</p>
+            <span class="preview-stream-link">B.Sc. Nursing / MLS &rarr;</span>
+          </a>
+
+          <a href="#programs" class="preview-stream-card route-link" data-route="programs">
+            <span class="course-code">AICTE • IKGPTU</span>
+            <h4>Management &amp; Commerce</h4>
+            <p>MBA (Finance, HR, Marketing, Analytics), BBA, and B.Com (Hons) built with corporate case studies.</p>
+            <span class="preview-stream-link">MBA / BBA / B.Com &rarr;</span>
+          </a>
+
+          <a href="#programs" class="preview-stream-card route-link" data-route="programs">
+            <span class="course-code">UGC • IKGPTU</span>
+            <h4>Computer Applications</h4>
+            <p>BCA, B.Sc. Computer Science, and skill-oriented Bachelor of Vocation (B.Voc) with industry apprenticeships.</p>
+            <span class="preview-stream-link">BCA / B.Sc. CS / B.Voc &rarr;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ==================== HOME PREVIEW 3: PLACEMENTS & RECRUITERS ==================== -->
+      <div class="section-container home-preview-section">
+        <div class="home-section-head">
+          <div>
+            <span class="section-eyebrow">Training &amp; Placement Cell</span>
+            <h2 class="section-heading">Career Outcomes &amp; Top Recruiters</h2>
+          </div>
+          <a href="#placements" class="btn btn-secondary route-link magnetic-btn" data-route="placements">
+            View Placement Cell &rarr;
+          </a>
+        </div>
+
+        <div class="bento-grid">
+          <div class="bento-card bento-span-1">
+            <div>
+              <div class="card-tag">Verified Outcomes</div>
+              <h3 class="bento-big-stat"><span data-cms="placement_rate">94%</span> <span>Placed</span></h3>
+              <p class="bento-desc" style="margin-top: 0.75rem;">
+                Backed by <strong style="color: var(--accent-secondary);" data-cms="placement_partners_count">200+</strong> corporate &amp; multi-specialty hospital tie-ups with round-the-year aptitude, coding, and mock interview bootcamps.
+              </p>
+            </div>
+            <div style="margin-top: 1.4rem;">
+              <a href="#placements" class="btn btn-primary btn-block route-link" data-route="placements">View Placement Cell &rarr;</a>
+            </div>
+          </div>
+
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag">Industry Recruitment Partners</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.55rem; margin-bottom: 0.6rem;">Where SGI Graduates Launch Global Careers</h3>
+              <p class="bento-desc" data-cms="placement_desc" style="margin-bottom: 1.2rem;">
+                The centralized Training &amp; Placement (T&amp;P) cell at SGI operates round the year, conducting aptitude coaching, mock technical interview sessions, industrial plant visits, and soft-skill bootcamps.
+              </p>
+
+              <div class="recruiter-badges-wrap">
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=tcs.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Tata Consultancy Services (TCS)</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=infosys.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Infosys</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=wipro.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Wipro Technologies</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=techmahindra.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Tech Mahindra</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=hcltech.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">HCL Technologies</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=sunpharma.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Sun Pharma</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=mankindpharma.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Mankind Pharma</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=cipla.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Cipla</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=fortishealthcare.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Fortis Healthcare</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=maxhealthcare.in&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Max Super Speciality</span>
+                <span class="recruiter-badge-pill"><img src="https://www.google.com/s2/favicons?domain=apollohospitals.com&sz=64" alt="" class="recruiter-pill-logo" loading="lazy" onerror="this.style.display='none';">Apollo Hospitals</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== HOME PREVIEW 4: CAMPUS & INFRASTRUCTURE ==================== -->
+      <div class="section-container home-preview-section">
+        <div class="home-section-head">
+          <div>
+            <span class="section-eyebrow">10+ Acre Hayat Nagar Campus</span>
+            <h2 class="section-heading">Campus Facilities &amp; Student Living</h2>
+          </div>
+          <a href="#campus" class="btn btn-secondary route-link magnetic-btn" data-route="campus">
+            Tour Campus &rarr;
+          </a>
+        </div>
+
+        <div class="home-campus-preview-grid">
+          <div class="campus-preview-tile">
+            <span class="campus-tile-icon">🔬</span>
+            <h4>Smart Labs &amp; Workshops</h4>
+            <p>High-speed computing suites, pharma formulation clean-rooms, nursing ICU simulation labs, and mechanical toolrooms.</p>
+          </div>
+
+          <div class="campus-preview-tile">
+            <span class="campus-tile-icon">📚</span>
+            <h4>Central Digital Library</h4>
+            <p>DELNET access, national &amp; international academic journals, reference collections, and air-conditioned reading halls.</p>
+          </div>
+
+          <div class="campus-preview-tile">
+            <span class="campus-tile-icon">🏠</span>
+            <h4>Separate Hostels</h4>
+            <p>Safe, Wi-Fi enabled residential quarters for boys and girls with 24/7 security, nutritious mess, and medical support.</p>
+          </div>
+
+          <div class="campus-preview-tile">
+            <span class="campus-tile-icon">🚌</span>
+            <h4>Fleet Bus Transport</h4>
+            <p>College-owned bus fleet connecting Gurdaspur, Batala, Pathankot, Mukerian, Dhariwal, Qadian, and Kalanaur.</p>
+          </div>
+        </div>
+
+        <div class="campus-preview-strip">
+          <div class="campus-strip-text">
+            <span class="card-tag" style="margin-bottom:0.2rem;">Campus Walkthrough</span>
+            <p style="color: var(--text-muted); font-size: 0.92rem;">Explore biometric security turnstiles, Wing B gardens, sports grounds, and video reels of campus life.</p>
+          </div>
+          <a href="#campus" class="btn btn-primary route-link" data-route="campus">Tour Campus &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Admissions Banner -->
+      <div class="section-container">
+        <div class="cta-banner">
+          <div>
+            <h2 id="dynCtaHeading">Admissions Open for <span class="dynamic-session">2026–27</span> Session</h2>
+            <p id="dynCtaDesc">Direct merit allotments and scholarship counseling are currently active. Early applicants receive priority hostel and branch choices.</p>
+          </div>
+          <button class="btn btn-primary btn-large magnetic-btn" onclick="openModal()">Claim Application Token</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. ABOUT VIEW ==================== -->
+    <section class="page-view" id="view-about">
+      <div class="page-header">
+        <span class="section-eyebrow">Legacy, Vision &amp; Verified Realities</span>
+        <h1 class="page-title">About SGI Gurdaspur</h1>
+        <p class="page-subtitle">Pioneering technical, managerial, and healthcare education across the Majha border belt under the S. Sukhjinder Singh Memorial Education Society.</p>
+      </div>
+
+      <div class="section-container">
+        <!-- Verified Numerical Facts Row -->
+        <div class="facts-highlight-row">
+          <div class="fact-mini-box">
+            <span class="fact-mini-stat" id="dynFactYears">25+</span>
+            <span class="fact-mini-lbl" data-cms="stat_years_title">Years of Academic Excellence</span>
+          </div>
+          <div class="fact-mini-box">
+            <span class="fact-mini-stat" id="dynFactAlumni">500,000+</span>
+            <span class="fact-mini-lbl" data-cms="stat_alumni_title">Global SGI Alumni &amp; Community</span>
+          </div>
+          <div class="fact-mini-box">
+            <span class="fact-mini-stat" id="dynFactStudents">3,000+</span>
+            <span class="fact-mini-lbl" data-cms="stat_students_title">International &amp; Out-of-State Students</span>
+          </div>
+          <div class="fact-mini-box">
+            <span class="fact-mini-stat" id="dynFactTieups">150+</span>
+            <span class="fact-mini-lbl" data-cms="stat_tieups_title">Programs &amp; 200+ Industry Tie-Ups</span>
+          </div>
+          <div class="fact-mini-box">
+            <span class="fact-mini-stat" id="dynFactAid">100%</span>
+            <span class="fact-mini-lbl">SC/ST/OBC Scholarship Aid</span>
+          </div>
+        </div>
+
+        <div class="bento-grid" style="margin-top: 1.5rem;">
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag">Our Academic Foundation</div>
+              <h3 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 1rem;">Bridging Regional Talent to Global Careers</h3>
+              <p class="bento-desc" style="font-size: 1.05rem; line-height: 1.8;">
+                Established under the <strong>S. Sukhjinder Singh Memorial Educational Society</strong>, SGI Gurdaspur is one of the most comprehensive private educational complexes in the Punjab–Himachal border belt. Located in Hayat Nagar, Hardochhani Road, the institution empowers students from Gurdaspur, Batala, Pathankot, Himachal Pradesh, J&amp;K, and international cohorts with premier professional qualifications.
+              </p>
+              <p class="bento-desc" style="margin-top: 1rem; line-height: 1.8;">
+                Recognized by National Education Awards for regional academic impact, SGI pairs university curricula across Engineering, Pharmacy, Nursing, Allied Health Sciences, Management, and Polytechnic with clinical hospital internships, smart laboratories, and IT coding workshops.
+              </p>
+            </div>
+          </div>
+
+          <!-- Campus Life & Holistic Growth Bento Card -->
+          <div class="bento-card bento-span-1 bento-campus-life">
+            <div>
+              <div class="card-tag">Campus Life &amp; Achievements</div>
+              <h3 id="dynCampusLifeTitle" style="font-family: var(--font-display); font-size: 1.5rem; margin: 0.4rem 0 0.8rem;">Shivalik Hills Campus &amp; Holistic Growth</h3>
+              
+              <div class="campus-life-img-container" id="campusLifePlaceholder">
+                <img id="dynCampusLifeImg" src="campus-wing-b.jpeg" onerror="this.src='campus-hero.jpeg'" alt="Campus Life and Student Achievements at SGI Gurdaspur" class="campus-life-preview-img">
+                <div class="img-badge-overlay">📸 Campus Life Highlight</div>
+                <div class="img-placeholder-caption" id="dynCampusLifeCaption">Shivalik Foothills • Smart Labs &amp; Student Hub</div>
+              </div>
+
+              <p id="dynCampusLifeDesc" class="bento-desc" style="margin-top: 0.9rem; font-size: 0.92rem; line-height: 1.65;">
+                Set amidst clean, green surroundings near the Shivalik Hills foothills, SGI combines smart digital classrooms, dedicated clinical nursing &amp; pharma simulation labs, cultural fests, inter-college sports, NSS camps, and technical hackathons for complete holistic student development.
+              </p>
+            </div>
+          </div>
+
+          <!-- Video & Photo Media Showcase with Autoplay -->
+          <div class="bento-card bento-span-3 bento-media-showcase">
+            <div class="media-showcase-header">
+              <div>
+                <span class="card-tag">Infrastructure &amp; Campus Reality</span>
+                <h3 style="font-family: var(--font-display); font-size: 1.8rem; letter-spacing: -0.5px;">Campus Reality in Motion</h3>
+                <p class="bento-desc" style="margin-top:0.3rem;">Experience an authentic walkthrough of SGI security gates, academic complexes, and green lawns.</p>
+              </div>
+              <span class="status-live-pill"><span class="pulse-dot"></span> Hayat Nagar Campus</span>
+            </div>
+
+            <div class="about-media-grid">
+              <!-- YouTube Promotional Video (responsive 16:9) -->
+              <div class="media-card media-video-card">
+                <div class="video-wrapper">
+                  <iframe src="https://www.youtube.com/embed/5UrrVoiXDmo?si=AGC_bGTLXV-KsPBJ&amp;enablejsapi=1" title="SGI Gurdaspur promotional video" class="about-video-embed" width="560" height="315" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="media-caption">
+                  <h4>SGI Gurdaspur Promotional Video</h4>
+                  <p>Take a look at our campus, academic wings, and student life.</p>
+                </div>
+              </div>
+
+              <!-- Photo 1: Campus Aerial View -->
+              <div class="media-card media-photo-card">
+                <div class="photo-wrapper">
+                  <img src="about-1.jpg" data-fallback-srcs="images/about-1.jpg|images.jpg" alt="Aerial view of SGI Gurdaspur campus with academic blocks and green lawns" class="about-showcase-photo" loading="lazy">
+                  <div class="video-tag-pill">Campus Aerial</div>
+                </div>
+                <div class="media-caption">
+                  <h4>Aerial Campus View</h4>
+                  <p>Academic complexes, landscaped lawns, and sports grounds spread across the campus.</p>
+                </div>
+              </div>
+
+              <!-- Photo 2: Panoramic Campus Banner (full width) -->
+              <div class="media-card media-photo-card media-card-wide">
+                <div class="photo-wrapper photo-wrapper-wide">
+                  <img src="about-2.jpg" data-fallback-srcs="images/about-2.jpg|sukhjinder_group_of_institutes_cover.jpg" alt="Panoramic aerial view of Sukhjinder Group of Institutes campus buildings" class="about-showcase-photo" loading="lazy">
+                  <div class="video-tag-pill">Panoramic View</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leadership Messages (Chairman & Vice-Chairman with Portraits) -->
+          <div class="bento-span-3 leadership-grid">
+            <!-- Chairman Card -->
+            <div class="bento-card leadership-card">
+              <div>
+                <div class="leadership-profile-head">
+                  <div class="leadership-avatar-frame">
+                    <img
+                      src="chairman.jpg"
+                      alt="Er. Swinder Singh Gill - Chairman, Sukhjinder Group of Institutes"
+                      class="leadership-avatar-img"
+                      onerror="if(!this.dataset.f){this.dataset.f=1;this.src='chairman.jpeg';}else if(this.dataset.f==='1'){this.dataset.f=2;this.src='chairman.png';}else{this.style.display='none'; this.nextElementSibling.style.display='flex';}"
+                    >
+                    <div class="leadership-avatar-fallback" style="display:none;">SG</div>
+                  </div>
+                  <div class="leadership-title-meta">
+                    <div class="card-tag" style="margin-bottom:0.25rem;">Message of Chairman</div>
+                    <h4 class="leadership-name">Er. Swinder Singh Gill</h4>
+                    <span class="leadership-designation">Chairman, Sukhjinder Group of Institutes</span>
+                  </div>
+                </div>
+
+                <blockquote class="leadership-quote">
+                  “It is with great pride that I welcome you to Sukhjinder Group of Institutes, a pioneer in professional education. Our goal is to nurture creative, result-oriented, and skilled students who are ready to excel in their careers and contribute meaningfully to society. Education is our foremost priority, and we have established campuses in the Shivalik Hills to provide students with a robust environment to develop professional expertise and leadership skills.”
+                </blockquote>
+              </div>
+            </div>
+
+            <!-- Vice-Chairman Card -->
+            <div class="bento-card leadership-card">
+              <div>
+                <div class="leadership-profile-head">
+                  <div class="leadership-avatar-frame">
+                    <img
+                      src="vice-chairman.jpg"
+                      alt="S. Sartaj Singh - Vice-Chairman, Sukhjinder Group of Institutes"
+                      class="leadership-avatar-img"
+                      onerror="if(!this.dataset.f){this.dataset.f=1;this.src='vice-chairman.jpeg';}else if(this.dataset.f==='1'){this.dataset.f=2;this.src='vice-chairman.png';}else{this.style.display='none'; this.nextElementSibling.style.display='flex';}"
+                    >
+                    <div class="leadership-avatar-fallback" style="display:none;">SS</div>
+                  </div>
+                  <div class="leadership-title-meta">
+                    <div class="card-tag" style="margin-bottom:0.25rem;">Message of Vice-Chairman</div>
+                    <h4 class="leadership-name">S. Sartaj Singh</h4>
+                    <span class="leadership-designation">Vice-Chairman, Sukhjinder Group of Institutes</span>
+                  </div>
+                </div>
+
+                <blockquote class="leadership-quote">
+                  “I extend a warm welcome to all students considering Sukhjinder Group of Institutes. Our campuses in Gurdaspur and Dunera offer a nurturing and motivating environment, supported by experienced faculty members dedicated to student development. SGI is designed to meet the needs of a diverse student community, promoting academic excellence, skill development, and life-long learning. I invite students to join us and explore the many opportunities for personal and professional growth that SGI provides.”
+                </blockquote>
+              </div>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Student Logistics</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">Connected Campus Transport</h4>
+              <p class="bento-desc">College-owned bus routes connecting students from Batala, Pathankot, Mukerian, Dhariwal, Qadian, and Kalanaur safely every morning and evening.</p>
+            </div>
+          </div>
+
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag">Verified Scholarships &amp; Inclusion</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">Zero Tuition Fee for Eligible SC/ST Students</h4>
+              <p class="bento-desc">Complete on-campus desk assistance for Dr. Ambedkar Post-Matric Scholarship Scheme (PMS) for SC/ST/OBC students, Prime Minister's Special Scholarship Scheme (PMSSS) for J&amp;K youth, and institutional merit incentives for Punjab &amp; Himachal Pradesh students.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. DEGREE PROGRAMS VIEW ==================== -->
+    <section class="page-view" id="view-programs">
+      <div class="page-header">
+        <span class="section-eyebrow">Academic Catalog</span>
+        <h1 class="page-title">Degree Programs &amp; Curriculum</h1>
+        <p class="page-subtitle">Explore approved Undergraduate, Postgraduate, and Diploma programs offered by SGI for the <span class="dynamic-session">2026–27</span> academic session.</p>
+      </div>
+
+      <div class="section-container">
+        <!-- Search Course / Degree by Typing -->
+        <div class="programs-search-wrap">
+          <div class="programs-search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="text"
+              id="programSearchInput"
+              class="programs-search-input"
+              placeholder="Type to find your course or degree (e.g. BTech, CSE, Pharmacy, Nursing, BCA, MBA)..."
+              autocomplete="off"
+            >
+            <button type="button" id="programSearchClear" class="search-clear-btn" aria-label="Clear search" style="display:none;">&times;</button>
+          </div>
+        </div>
+
+        <!-- Interactive Discipline Filters -->
+        <div class="filter-wrapper">
+          <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">All Degrees</button>
+            <button class="filter-btn" data-filter="engineering">Engineering &amp; Tech</button>
+            <button class="filter-btn" data-filter="pharma">Pharmacy</button>
+            <button class="filter-btn" data-filter="nursing">Nursing &amp; Health</button>
+            <button class="filter-btn" data-filter="mgmt">Management &amp; Commerce</button>
+            <button class="filter-btn" data-filter="vocational">CS, BCA &amp; B.Voc</button>
+          </div>
+        </div>
+
+        <div class="courses-grid" id="coursesGrid">
+          <!-- Fallback static list; hydrated dynamically from /api/public-content -->
+          <div class="course-pill" data-category="engineering">
+            <div>
+              <span class="course-code">AICTE • IKGPTU • 4 YEARS</span>
+              <h4>B.Tech in Computer Science &amp; Engineering</h4>
+              <p>Artificial Intelligence, Cloud Computing, Full-stack software development, cyber security and networking.</p>
+            </div>
+            <span class="duration">Eligibility: 10+2 with Physics &amp; Mathematics / JEE</span>
+          </div>
+          <div class="course-pill" data-category="pharma">
+            <div>
+              <span class="course-code">PCI • IKGPTU • 4 YEARS</span>
+              <h4>Bachelor of Pharmacy (B.Pharmacy)</h4>
+              <p>Drug formulation, clinical pharmacology, pharmaceutical chemistry, clinical testing, and dispensary management.</p>
+            </div>
+            <span class="duration">Eligibility: 10+2 with PCB / PCM</span>
+          </div>
+          <div class="course-pill" data-category="nursing">
+            <div>
+              <span class="course-code">INC • BFUHS • PNRC • 4 YEARS</span>
+              <h4>B.Sc. Nursing (Basic)</h4>
+              <p>Clinical hospital rotations, critical ICU care, maternal health, pediatrics, and emergency medicine.</p>
+            </div>
+            <span class="duration">Eligibility: 10+2 with PCB &amp; English</span>
+          </div>
+        </div>
+
+        <div id="programsEmptyState" class="programs-empty-state" style="display:none;">
+          <p>No degree programs matched your search.</p>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="resetProgramSearch()">Show All Programs</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+          <button class="btn btn-primary btn-large magnetic-btn" onclick="openModal()">Apply For Any Degree Program</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 4. PLACEMENTS VIEW ==================== -->
+    <section class="page-view" id="view-placements">
+      <div class="page-header">
+        <span class="section-eyebrow">Industry Connect</span>
+        <h1 class="page-title">Placements &amp; Career Outcomes</h1>
+        <p class="page-subtitle">Bridging classroom competence with Fortune 500 tech firms, healthcare networks, and pharmaceutical manufacturers.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="bento-grid">
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag">Training &amp; Placement Cell</div>
+              <h3 class="bento-big-stat"><span id="dynPlacementRate">94%</span> <span>Placed</span></h3>
+              <p class="bento-desc" id="dynPlacementDesc" style="font-size: 1.05rem;">
+                The centralized Training &amp; Placement (T&amp;P) cell at SGI operates round the year, conducting aptitude coaching, mock technical interview sessions, industrial plant visits, and soft-skill bootcamps.
+              </p>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Corporate Tie-ups</div>
+              <h3 class="bento-stat" id="dynPlacementPartners">200+</h3>
+              <p class="bento-desc">Recruiting organizations and multi-specialty hospitals participating in campus placement drives.</p>
+            </div>
+          </div>
+
+          <div class="bento-card bento-span-3">
+            <div class="card-tag">Top Recruitment Partners</div>
+            <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 1.5rem;">Where Our Alumni Work</h3>
+            <div class="recruiters-grid">
+              <a href="https://www.tcs.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=tcs.com&sz=128" alt="TCS logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">TCS</span>
+                  </span>
+                  <span>Tata Consultancy Services (TCS)</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.infosys.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=infosys.com&sz=128" alt="Infosys logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">INFY</span>
+                  </span>
+                  <span>Infosys</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.wipro.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=wipro.com&sz=128" alt="Wipro logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">WIP</span>
+                  </span>
+                  <span>Wipro Technologies</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.techmahindra.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=techmahindra.com&sz=128" alt="Tech Mahindra logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">TM</span>
+                  </span>
+                  <span>Tech Mahindra</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://sunpharma.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=sunpharma.com&sz=128" alt="Sun Pharma logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">SUN</span>
+                  </span>
+                  <span>Sun Pharma</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.mankindpharma.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=mankindpharma.com&sz=128" alt="Mankind Pharma logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">MK</span>
+                  </span>
+                  <span>Mankind Pharma</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.fortishealthcare.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=fortishealthcare.com&sz=128" alt="Fortis Healthcare logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">FH</span>
+                  </span>
+                  <span>Fortis Healthcare</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.maxhealthcare.in/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=maxhealthcare.in&sz=128" alt="Max Healthcare logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">MAX</span>
+                  </span>
+                  <span>Max Super Speciality Hospital</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.cipla.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=cipla.com&sz=128" alt="Cipla logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">CIP</span>
+                  </span>
+                  <span>Cipla</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.hcltech.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=hcltech.com&sz=128" alt="HCL Technologies logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">HCL</span>
+                  </span>
+                  <span>HCL Technologies</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://www.apollohospitals.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <img src="https://www.google.com/s2/favicons?domain=apollohospitals.com&sz=128" alt="Apollo Hospitals logo" class="recruiter-logo-img" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <span class="recruiter-logo-fallback" style="display:none;">AH</span>
+                  </span>
+                  <span>Apollo Hospitals</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+
+              <a href="https://sunpharma.com/" target="_blank" rel="noopener noreferrer" class="recruiter-box">
+                <div class="recruiter-brand">
+                  <span class="recruiter-logo-wrap">
+                    <span class="recruiter-logo-fallback" style="display:flex;">Rx</span>
+                  </span>
+                  <span>Ranbaxy Laboratories</span>
+                </div>
+                <span class="external-arrow">↗</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 5. CAMPUS VIEW ==================== -->
+    <section class="page-view campus-view-styled" id="view-campus">
+      <div class="campus-backdrop-media">
+        <img 
+          src="campus-hero.jpeg" 
+          onerror="if(!this.dataset.fallback){this.dataset.fallback=1;this.src='campus-hero.jpg';}else{this.src='https://sgigurdaspur.org/wp-content/uploads/2026/01/SukhJinder-Group-of-Institutes.jpg';}" 
+          alt="SGI Campus Background" 
+          class="campus-backdrop-img"
+        >
+        <div class="campus-backdrop-overlay"></div>
+      </div>
+
+      <div class="page-header">
+        <span class="section-eyebrow">Life At SGI</span>
+        <h1 class="page-title">Campus &amp; Infrastructure</h1>
+        <p class="page-subtitle">Over 10 acres of purpose-built learning spaces on Hardochhani Road, Hayat Nagar, Gurdaspur.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="bento-grid">
+          <div class="bento-card bento-span-2">
+            <div>
+              <div class="card-tag">Laboratories &amp; Computing</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 0.8rem;">Advanced Practical Ecosystem</h3>
+              <p class="bento-desc" style="line-height: 1.8;">
+                Each department is supported by dedicated, state-regulated laboratory wings: high-speed computer labs equipped with modern programming suites, pharmaceutics formulation clean-rooms, anatomy simulation mannequins for nursing cohorts, and fully furnished mechanical toolrooms.
+              </p>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Central Library</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">Digital &amp; Print Repository</h4>
+              <p class="bento-desc">Access to DELNET, thousands of national &amp; international journal publications, reference textbooks, and air-conditioned reading halls.</p>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Student Living</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">On-Campus Hostels</h4>
+              <p class="bento-desc">Separate, secure residential quarters for boys and girls with 24/7 security, nutritious dining messes, and Wi-Fi connectivity.</p>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Mobility</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">Fleet Transportation</h4>
+              <p class="bento-desc">Comprehensive bus routes linking Gurdaspur, Batala, Dhariwal, Mukerian, Pathankot, and surrounding rural catchment areas.</p>
+            </div>
+          </div>
+
+          <div class="bento-card">
+            <div>
+              <div class="card-tag">Recreation</div>
+              <h4 style="font-family: var(--font-display); font-size: 1.4rem;">Sports &amp; Health</h4>
+              <p class="bento-desc">Dedicated cricket and football grounds, badminton courts, indoor sports arena, and round-the-clock emergency medical assistance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 6. CONTACT & INQUIRY DESK ==================== -->
+    <section class="page-view" id="view-contact">
+      <div class="page-header">
+        <span class="section-eyebrow">Direct Admissions &amp; Campus Support</span>
+        <h1 class="page-title">Campus Contact Desk</h1>
+        <p class="page-subtitle">Have a question about eligibility, fee structure, scholarships, or campus facilities? Reach out to our Gurdaspur admissions office directly.</p>
+      </div>
+
+      <div class="section-container">
+        <div class="bento-grid">
+          <!-- Official Contact Details Bento Card -->
+          <div class="bento-card bento-span-1">
+            <div>
+              <div class="card-tag">Official Coordinates</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1.2rem;">Main Campus</h3>
+              
+              <div class="contact-detail-block">
+                <strong>Address:</strong>
+                <p id="dynContactAddress">V.P.O. Hayat Nagar, Hardochhani Road, Gurdaspur, Punjab – 143521</p>
+              </div>
+
+              <div class="contact-detail-block">
+                <strong>Admissions Helpline:</strong>
+                <p><a href="tel:+919316093494" id="dynContactPhone" style="color:var(--accent-primary); font-weight:700; text-decoration:none;">+91 93160 93494</a></p>
+              </div>
+
+              <div class="contact-detail-block">
+                <strong>Email Support:</strong>
+                <p><a href="mailto:admin@sgigurdaspur.org" id="dynContactEmail" style="color:var(--text-main); text-decoration:none;">admin@sgigurdaspur.org</a></p>
+              </div>
+
+              <div class="contact-detail-block">
+                <strong>Office Hours:</strong>
+                <p id="dynOfficeHours">Monday – Saturday: 9:00 AM – 5:00 PM</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+              <a href="https://maps.google.com/?q=Sukhjinder+Group+of+Institutes+Gurdaspur" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-block">
+                📍 Open in Google Maps ↗
+              </a>
+            </div>
+          </div>
+
+          <!-- Contact Inquiry Form Bento Card -->
+          <div class="bento-card bento-span-2 bento-card-overflow-visible">
+            <div>
+              <div class="card-tag">Campus Inquiry Form</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.7rem; margin-bottom: 0.6rem;">Connect with Our Admissions Team</h3>
+              <p class="bento-desc" style="margin-bottom: 1.5rem;">Type to find or choose your course/degree program of interest and send us your question for a prompt callback.</p>
+
+              <form id="contactRoutingForm" onsubmit="handleContactRouting(event)">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contactName">Your Full Name *</label>
+                    <input type="text" id="contactName" class="form-input" placeholder="e.g. Gurpreet Singh" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="contactPhone">Mobile Number (WhatsApp Preferred) *</label>
+                    <input type="tel" id="contactPhone" class="form-input" placeholder="10-digit number" required>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contactEmail">Email Address *</label>
+                    <input type="email" id="contactEmail" class="form-input" placeholder="name@example.com" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="contactCity">City / District *</label>
+                    <input type="text" id="contactCity" class="form-input" placeholder="e.g. Gurdaspur, Batala, Pathankot" required>
+                  </div>
+                </div>
+
+                <!-- Searchable Course / Degree Combobox -->
+                <div class="form-group">
+                  <label for="routeCourse">Select or Type Course / Degree *</label>
+                  <div class="course-combobox" id="routeCourseCombobox">
+                    <div class="combobox-input-wrap">
+                      <input
+                        type="text"
+                        id="routeCourse"
+                        class="form-input combobox-input"
+                        placeholder="Type to search (e.g. BTech, CSE, Pharmacy, Nursing, MBA) or click ▾..."
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        aria-expanded="false"
+                        aria-controls="routeCourseList"
+                        required
+                      >
+                      <button type="button" class="combobox-clear-btn" id="routeCourseClear" aria-label="Clear course search" style="display:none;">&times;</button>
+                      <button type="button" class="combobox-toggle-btn" id="routeCourseToggle" aria-label="Show all courses">▾</button>
+                    </div>
+                    <div class="combobox-dropdown" id="routeCourseList" role="listbox"></div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="contactMessage">Your Message / Specific Question</label>
+                  <textarea id="contactMessage" rows="3" class="form-input" placeholder="State your inquiry or requirement..." style="resize:vertical;"></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:1.2rem;">
+                  <span id="contactFormStatus" style="font-size:0.88rem;"></span>
+                  <button type="submit" class="btn btn-primary btn-large magnetic-btn">
+                    Submit Inquiry &rarr;
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Dynamic Admissions & Academic Counseling Team Profiles -->
+          <div class="bento-card bento-span-3">
+            <div>
+              <div class="card-tag">Admissions &amp; Faculty Directory</div>
+              <h3 style="font-family: var(--font-display); font-size: 1.7rem; margin-bottom: 0.4rem;">Meet Our Admissions &amp; Counseling Team</h3>
+              <p class="bento-desc" style="margin-bottom: 1.4rem;">Verified departmental heads and admissions counselors synced live from the SGI Staff Portal.</p>
+              <div class="staff-directory-grid" id="publicStaffGrid">
+                <p class="bento-desc">Loading staff directory...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Interactive Quick Application Modal -->
+  <div class="modal-backdrop" id="appModal" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close Application Modal">&times;</button>
+      <span class="card-tag">Direct Admissions Portal</span>
+      <h3>Fast-Track Registration</h3>
+      <p class="modal-desc" style="color: var(--text-muted); margin: 0.5rem 0 1.5rem;">Fill out your details to receive an instant callback and seat verification from SGI counseling officers for session <span class="dynamic-session">2026–27</span>.</p>
+
+      <form id="leadForm">
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input type="text" id="fullName" name="full_name" class="form-input" placeholder="e.g. Gurpreet Singh" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" class="form-input" placeholder="10-digit number" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="student@example.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">City / District *</label>
+            <input type="text" id="city" name="city" class="form-input" placeholder="e.g. Gurdaspur, Batala" required>
+          </div>
+          <div class="form-group">
+            <label for="programInterest">Degree Program Interest *</label>
+            <div class="course-combobox" id="applyCourseCombobox">
+              <div class="combobox-input-wrap">
+                <input 
+                  type="text" 
+                  name="program_interest" 
+                  id="programInterest" 
+                  placeholder="Type to search (e.g. BTech, CSE, Pharmacy)..." 
+                  class="form-input combobox-input" 
+                  autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-expanded="false"
+                  aria-controls="applyCourseList"
+                  required
+                >
+                <button type="button" class="combobox-clear-btn" id="applyCourseClear" aria-label="Clear course search" style="display:none;">&times;</button>
+                <button type="button" class="combobox-toggle-btn" id="applyCourseToggle" aria-label="Show all courses">▾</button>
+              </div>
+              <div class="combobox-dropdown combobox-dropdown-up" id="applyCourseList" role="listbox"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large btn-block magnetic-btn" style="margin-top: 1rem;">
+          Submit Application Intent
+        </button>
+        <p class="form-status" id="formStatus"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Interactive Notice Details Modal with Attached PDF Preview & Download -->
+  <div class="modal-backdrop" id="noticeModal" aria-hidden="true">
+    <div class="modal-card modal-notice-expanded">
+      <button class="modal-close" onclick="closeNoticeModal()" aria-label="Close Notice Modal">&times;</button>
+      <div class="notice-modal-header">
+        <span class="notice-badge" id="modalNoticeBadge">IKGPTU Notification</span>
+        <span class="notice-modal-date" id="modalNoticeDate">Date: Active Session</span>
+      </div>
+      <h3 id="modalNoticeTitle" style="font-family: var(--font-display); font-size: 1.45rem; line-height: 1.3; margin: 0.8rem 0 0.4rem;">Circular Title</h3>
+      <div class="notice-meta-tag-row">
+        <span><strong>Ref No:</strong> <span id="modalNoticeRef">SGI/NOT/2026/01</span></span>
+        <span>•</span>
+        <span><strong>Issuing Authority:</strong> <span id="modalNoticeAuthority">Examination Branch</span></span>
+      </div>
+      <hr style="border: 0; border-top: 1px solid var(--bg-card-border); margin: 1.2rem 0;">
+      <div class="notice-modal-body">
+        <p id="modalNoticeBody" style="color: var(--text-muted); line-height: 1.8; font-size: 0.95rem; white-space: pre-line;">Official circular detailed contents will appear here.</p>
+
+        <!-- Embedded PDF Viewer when Notice has an Attached PDF -->
+        <div id="modalNoticePdfContainer" class="notice-pdf-preview-box" style="display:none;">
+          <div class="notice-pdf-preview-header">
+            <span id="modalNoticePdfFilename">📄 Attached Official Circular.pdf</span>
+            <a id="modalNoticeOpenPdfLink" href="#" target="_blank" rel="noopener noreferrer" class="notice-pdf-open-link">Open Fullscreen ↗</a>
+          </div>
+          <iframe id="modalNoticePdfFrame" class="notice-pdf-iframe" title="Attached Notice PDF Preview"></iframe>
+        </div>
+      </div>
+      <div class="notice-modal-footer">
+        <button id="modalDownloadPdfBtn" class="btn btn-primary btn-sm" onclick="downloadCurrentNoticePDF()">
+          Download Circular (PDF) 📄
+        </button>
+        <button class="btn btn-secondary btn-sm" onclick="closeNoticeModal()">Close Notice</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comprehensive Multi-Column Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <!-- Column 1: Brand & Contact -->
+      <div class="footer-col footer-brand-col">
+        <h3 style="font-family: var(--font-display); color: var(--text-main); margin-bottom: 0.5rem;">Sukhjinder Group of Institutes</h3>
+        <p id="dynFooterAddress" style="color: var(--text-muted); font-size: 0.9rem;">V.P.O. Hayat Nagar, Hardochhani Road, Gurdaspur, Punjab – 143521</p>
+        <p style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Admissions Helpline: <strong id="dynFooterPhone" style="color: var(--accent-primary);">+91 93160 93494</strong></p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Campus Admin: <a href="mailto:admin@sgigurdaspur.org" id="dynFooterEmail" style="color: var(--text-main); text-decoration: none;">admin@sgigurdaspur.org</a></p>
+
+        <!-- Official Clickable Social Media Handles -->
+        <div class="social-handles-row">
+          <a href="https://www.instagram.com/sukhjindergroupofinstitutes_?vrfl=MXY5OGs4MzdmYWFsdA==" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="SGI Official Instagram">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            <span>Instagram</span>
+          </a>
+
+          <a href="https://www.linkedin.com/school/sukhjinder-group-of-institutes/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="SGI Official LinkedIn">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+
+          <a href="mailto:admin@sgigurdaspur.org" class="social-btn" aria-label="Direct Email to Campus">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+              <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 4.712v-9.458l4.623 4.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.259l4.616-4.741v9.463l-4.616-4.722z"/>
+            </svg>
+            <span>Email</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Column 2: About SGI -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">About SGI</h4>
+        <p class="footer-about-blurb"><span data-cms="stat_years">25+</span> years of excellence under the S. Sukhjinder Singh Memorial Education Society.</p>
+        <ul class="footer-links-list">
+          <li><a href="#about" class="route-link" data-route="about">About SGI &amp; Legacy</a></li>
+          <li><a href="#about" class="route-link" data-route="about">Leadership &amp; Vision</a></li>
+          <li><a href="#about" class="route-link" data-route="about">SC/ST &amp; PMSSS Scholarships</a></li>
+          <li><a href="#admissions" onclick="event.preventDefault(); openModal();">Admissions (<span class="dynamic-session">2026–27</span>)</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Degree Programs -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Degree Programs</h4>
+        <ul class="footer-links-list">
+          <li><a href="#programs" class="route-link" data-route="programs">Engineering &amp; Tech (B.Tech)</a></li>
+          <li><a href="#programs" class="route-link" data-route="programs">Pharmacy (B.Pharm / D.Pharm)</a></li>
+          <li><a href="#programs" class="route-link" data-route="programs">Nursing &amp; Allied Health</a></li>
+          <li><a href="#programs" class="route-link" data-route="programs">Management &amp; Commerce (MBA/BBA)</a></li>
+          <li><a href="#programs" class="route-link" data-route="programs">Computer Applications (BCA / B.Voc)</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Campus & Placements -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Campus &amp; Placements</h4>
+        <ul class="footer-links-list">
+          <li><a href="#placements" class="route-link" data-route="placements">Training &amp; Placement Cell (<span data-cms="placement_rate">94%</span> Placed)</a></li>
+          <li><a href="#placements" class="route-link" data-route="placements">Top Corporate Recruiters</a></li>
+          <li><a href="#campus" class="route-link" data-route="campus">Smart Labs &amp; Library</a></li>
+          <li><a href="#campus" class="route-link" data-route="campus">Hostels &amp; Fleet Bus Transport</a></li>
+          <li><a href="#contact" class="route-link" data-route="contact">Contact &amp; Inquiry Desk</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 5: Mandatory Disclosures & Help -->
+      <div class="footer-col">
+        <h4 class="footer-col-title">Mandatory Disclosures &amp; Help</h4>
+        <ul class="footer-links-list">
+          <li><a href="#compliance" onclick="event.preventDefault(); downloadProspectusPDF()">AICTE Mandatory Disclosure (PDF)</a></li>
+          <li><a href="https://www.pci.nic.in/" target="_blank" rel="noopener noreferrer">PCI Statutory Approvals ↗</a></li>
+          <li><a href="https://indiannursingcouncil.org/" target="_blank" rel="noopener noreferrer">INC &amp; PNRC Affiliation Orders ↗</a></li>
+          <li><a href="#compliance" onclick="event.preventDefault(); downloadProspectusPDF()">Approved Fee Structure &amp; Prospectus</a></li>
+          <li><a href="tel:18001805522" style="color: var(--accent-primary); font-weight: 700;">Anti-Ragging Helpline: 1800-180-5522</a></li>
+          <li><a href="#rti" onclick="event.preventDefault(); alert('RTI Cell: V.P.O. Hayat Nagar, Hardochhani Road, Gurdaspur, Punjab – 143521')">Right to Information (RTI) Cell</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sub-footer">
+      <div class="sub-footer-inner">
+        <p>© <span id="dynamic-year"></span> Sukhjinder Group of Institutes. All rights reserved.</p>
+        <p style="color: var(--text-muted); font-size: 0.8rem;">Affiliated to IKGPTU Jalandhar, BFUHS Faridkot &amp; PSBTE • Approved by AICTE, PCI &amp; INC New Delhi</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js?v=20261124"></script>
+</body>
+</html>

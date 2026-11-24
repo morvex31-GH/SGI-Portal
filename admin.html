@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SGI Admissions CRM | Multi-User Staff &amp; Content Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0B2545;
+      --card-bg: rgba(19, 49, 92, 0.88);
+      --border: rgba(255, 255, 255, 0.14);
+      --accent: #F4B400;
+      --accent-bright: #FFC107;
+      --text: #FFFFFF;
+      --text-muted: #CBD5E1;
+      --green: #10b981;
+      --logout-red: #ff4d4f;
+      --blue: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at top right, #13315C 0%, #0B2545 60%, #071930 100%);
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 1.8rem 2rem 3rem;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .admin-header {
+      max-width: 1440px;
+      margin: 0 auto 1.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 1.3rem;
+    }
+    .admin-brand { display: flex; align-items: center; gap: 0.8rem; }
+    .badge-sgi {
+      background: var(--accent);
+      color: #0B2545;
+      font-weight: 900;
+      padding: 6px 13px;
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+    }
+    .admin-title h1 { font-family: 'Syne', sans-serif; font-size: 1.45rem; line-height: 1.2; }
+    .admin-title p { font-size: 0.85rem; color: var(--text-muted); }
+
+    .header-right-zone {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid var(--green);
+      color: #34d399;
+      padding: 7px 14px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .pulse {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--green);
+      animation: pulseAnim 1.5s infinite;
+    }
+    @keyframes pulseAnim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.3); } }
+
+    .admin-profile-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 6px 12px 6px 6px;
+      border-radius: 50px;
+    }
+    .profile-avatar-btn {
+      position: relative;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .profile-avatar-wrap {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+      color: #0B2545;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      flex-shrink: 0;
+      overflow: hidden;
+      border: 2px solid rgba(244, 180, 0, 0.75);
+    }
+    .profile-avatar-wrap img,
+    .staff-avatar-thumb img,
+    .my-profile-avatar-lg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .avatar-cam-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #0B2545;
+      border: 1.5px solid var(--accent);
+      color: var(--accent-bright);
+      font-size: 0.58rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-info { display: flex; flex-direction: column; cursor: pointer; }
+    .profile-name { font-size: 0.86rem; font-weight: 800; color: var(--text); }
+    .profile-role-dept { font-size: 0.72rem; color: var(--accent-bright); font-weight: 700; }
+
+    .btn-profile-logout {
+      background: #dc2626 !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      padding: 7px 15px !important;
+      border-radius: 30px !important;
+      font-size: 0.8rem !important;
+      border: 1px solid #b91c1c !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.3rem !important;
+      white-space: nowrap;
+    }
+    .btn-profile-logout:hover { background: #b91c1c !important; }
+
+    /* Workspace Navigation Switcher */
+    .workspace-nav {
+      max-width: 1440px;
+      margin: 0 auto 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .workspace-tabs {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .ws-tab {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.75rem 1.3rem;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+    }
+    .ws-tab:hover {
+      color: #FFFFFF;
+      border-color: var(--accent);
+    }
+    .ws-tab.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+      color: #0B2545;
+      border-color: var(--accent);
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(244, 180, 0, 0.28);
+    }
+
+    .workspace-panel { display: none; }
+    .workspace-panel.active { display: block; animation: fadeSlide 0.25s ease; }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Stats Grid */
+    .stats-grid {
+      max-width: 1440px;
+      margin: 0 auto 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .stat-label { font-size: 0.78rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+    .stat-num { font-size: 2.3rem; font-family: 'Syne', sans-serif; font-weight: 900; color: var(--accent-bright); margin-top: 0.3rem; }
+
+    /* Control Panel */
+    .control-panel {
+      max-width: 1440px;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+      border-radius: 14px;
+    }
+    .branch-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .tab-btn {
+      background: rgba(11, 37, 69, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover { background: var(--accent); color: #0B2545; border-color: var(--accent); font-weight: 800; }
+
+    .action-group-right { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .btn-action {
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .btn-action:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    .btn-accent { background: linear-gradient(135deg, var(--accent), var(--accent-bright)); color: #0B2545; font-weight: 800; }
+    .btn-manage-staff { background: rgba(56, 189, 248, 0.16); border: 1px solid var(--blue); color: var(--blue); }
+    .btn-outline { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--accent); }
+    .btn-danger-sm { background: rgba(255, 77, 79, 0.14); border: 1px solid rgba(255, 77, 79, 0.4); color: #ff7875; }
+    .btn-danger-sm:hover { background: rgba(255, 77, 79, 0.26); }
+    .btn-success-sm { background: rgba(16, 185, 129, 0.16); border: 1px solid rgba(16, 185, 129, 0.45); color: #34d399; }
+    .btn-success-sm:hover { background: rgba(16, 185, 129, 0.28); }
+    .btn-warn-sm { background: rgba(244, 180, 0, 0.14); border: 1px solid rgba(244, 180, 0, 0.45); color: #ffc107; }
+    .btn-warn-sm:hover { background: rgba(244, 180, 0, 0.26); }
+    .btn-photo-sm { background: rgba(56, 189, 248, 0.16); border: 1px solid rgba(56, 189, 248, 0.45); color: #38bdf8; }
+    .btn-photo-sm:hover { background: rgba(56, 189, 248, 0.28); }
+
+    /* Table */
+    .table-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th {
+      padding: 1rem;
+      background: rgba(11, 37, 69, 0.85);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-bright);
+      border-bottom: 1px solid var(--border);
+    }
+    td { padding: 0.95rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: rgba(255, 255, 255, 0.04); }
+
+    .branch-pill {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      background: rgba(244, 180, 0, 0.14);
+      color: var(--accent-bright);
+      border: 1px solid var(--accent);
+    }
+    .pdf-link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.14);
+      color: var(--blue);
+      border: 1px solid rgba(56, 189, 248, 0.38);
+      text-decoration: none;
+      margin-top: 0.35rem;
+    }
+    .pdf-link-pill:hover { background: rgba(56, 189, 248, 0.25); }
+    .status-pill-active {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .status-pill-archived {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: rgba(148, 163, 184, 0.16);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .status-select {
+      background: rgba(11, 37, 69, 0.85);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 5px 8px;
+      border-radius: 6px;
+      outline: none;
+      cursor: pointer;
+    }
+    .status-select option { background: #0B2545; color: #fff; }
+
+    .btn-act {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-wa { background: #25d366; color: #fff; }
+    .btn-call { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); color: var(--text); }
+    .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+
+    /* Dynamic Site Content Cards */
+    .cms-grid {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 1.5rem;
+    }
+    .cms-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+    }
+    .cms-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      color: var(--accent-bright);
+      margin-bottom: 0.3rem;
+    }
+    .cms-card .cms-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.2rem;
+    }
+    .cms-stat-row {
+      background: rgba(11, 37, 69, 0.55);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+    .cms-stat-row-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(7, 25, 48, 0.8);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 1rem;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-backdrop.cropper-layer { z-index: 4500; background: rgba(4, 15, 32, 0.9); }
+    .modal-card {
+      background: #13315C;
+      border: 1px solid rgba(244, 180, 0, 0.4);
+      padding: 2.2rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 92vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      background: none; border: none;
+      font-size: 1.6rem; color: var(--text-muted);
+      cursor: pointer;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.4rem; }
+    .form-group label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); }
+    .form-group input, .form-group select, .form-group textarea {
+      background: rgba(11, 37, 69, 0.8);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.72rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      width: 100%;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group select option { background: #0B2545; color: #FFFFFF; }
+    .full-span { grid-column: span 2; }
+
+    .pdf-dropzone {
+      background: rgba(11, 37, 69, 0.65);
+      border: 1.5px dashed rgba(244, 180, 0, 0.55);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .pdf-dropzone input[type="file"] {
+      border: none;
+      background: transparent;
+      padding: 0.25rem 0;
+      cursor: pointer;
+    }
+    .current-pdf-info {
+      margin-top: 0.55rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Staff Avatar & Photo Upload UI */
+    .staff-photo-picker-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(11, 37, 69, 0.65);
+      border: 1.5px dashed rgba(244, 180, 0, 0.5);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      flex-wrap: wrap;
+    }
+    .staff-avatar-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+      color: #0B2545;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid rgba(244, 180, 0, 0.7);
+    }
+    .my-profile-hero {
+      display: flex;
+      align-items: center;
+      gap: 1.3rem;
+      background: rgba(11, 37, 69, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .my-profile-avatar-lg {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+      color: #0B2545;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      overflow: hidden;
+      border: 3px solid var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* Interactive Image Cropper UI */
+    .cropper-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin-top: 1.2rem;
+    }
+    .cropper-stage-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .cropper-viewport {
+      width: min(300px, 100%);
+      aspect-ratio: 1 / 1;
+      height: auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 2px solid var(--accent);
+      background: #071930;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+    .cropper-viewport:active { cursor: grabbing; }
+    .cropper-viewport canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .cropper-circle-guide {
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 193, 7, 0.9);
+      box-shadow: 0 0 0 9999px rgba(7, 25, 48, 0.52);
+      pointer-events: none;
+    }
+    .cropper-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cropper-preview-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(11, 37, 69, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem;
+    }
+    .cropper-preview-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      overflow: hidden;
+      background: #071930;
+      flex-shrink: 0;
+    }
+    .cropper-preview-square {
+      width: 72px;
+      height: 72px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      overflow: hidden;
+      background: #071930;
+      flex-shrink: 0;
+    }
+    .cropper-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .cropper-slider-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* Toast Notification */
+    .admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0B2545;
+      border: 1px solid var(--green);
+      color: #FFFFFF;
+      padding: 0.9rem 1.35rem;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.5);
+      z-index: 6000;
+      display: none;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .admin-toast.show { display: flex; animation: fadeSlide 0.2s ease; }
+    .admin-toast.error { border-color: var(--logout-red); }
+
+    @media (max-width: 768px) {
+      body { padding: 1rem; }
+      .modal-card { padding: 1.4rem 1.15rem; }
+      .cms-grid { grid-template-columns: 1fr; }
+      .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+      .full-span { grid-column: span 1; }
+      .cropper-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="admin-brand">
+      <span class="badge-sgi">SGI</span>
+      <div class="admin-title">
+        <h1>Admissions CRM &amp; Dynamic Content Console</h1>
+        <p>Role-Based Branch Silos • Notices, Degree Programs &amp; Live Website CMS</p>
+      </div>
+    </div>
+
+    <div class="header-right-zone">
+      <div class="live-indicator">
+        <span class="pulse"></span>
+        <span>Auto-Sync Active</span>
+      </div>
+
+      <a href="/" target="_blank" class="btn-action btn-outline">
+        View Public Site ↗
+      </a>
+
+      <div class="admin-profile-section">
+        <button type="button" class="profile-avatar-btn" onclick="openMyProfileModal()" title="Edit your profile photo">
+          <div class="profile-avatar-wrap" id="userAvatar">DA</div>
+          <span class="avatar-cam-badge" aria-hidden="true">📷</span>
+        </button>
+        <div class="profile-info" onclick="openMyProfileModal()" title="Manage profile photo">
+          <span class="profile-name" id="userNameDisplay">Director of Admissions</span>
+          <span class="profile-role-dept" id="userRoleDeptDisplay">SUPER_ADMIN • All</span>
+        </div>
+        <button onclick="handleLogout()" class="btn-profile-logout" title="Sign out immediately">
+          🚪 Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Workspace Switcher -->
+  <nav class="workspace-nav">
+    <div class="workspace-tabs">
+      <button class="ws-tab active" data-workspace="crm" onclick="switchWorkspace('crm', this)">
+        📋 Admissions CRM
+      </button>
+      <button class="ws-tab" data-workspace="notices" onclick="switchWorkspace('notices', this)">
+        📢 Notices &amp; Circulars
+      </button>
+      <button class="ws-tab" id="tabPrograms" data-workspace="programs" onclick="switchWorkspace('programs', this)" style="display:none;">
+        🎓 Degree Programs
+      </button>
+      <button class="ws-tab" id="tabContent" data-workspace="content" onclick="switchWorkspace('content', this)" style="display:none;">
+        ⚙️ Site Content &amp; Highlights
+      </button>
+    </div>
+
+    <div class="action-group-right">
+      <button class="btn-action btn-outline" onclick="openMyProfileModal()">
+        🖼️ My Profile Photo
+      </button>
+      <button class="btn-action btn-manage-staff" id="btnManageStaff" style="display:none;" onclick="openStaffModal()">
+        👥 Manage Staff Accounts
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== 1. ADMISSIONS CRM PANEL ==================== -->
+  <div class="workspace-panel active" id="panel-crm">
+    <section class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Applicants</span>
+        <div class="stat-num" id="statTotal">0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Engineering Leads</span>
+        <div class="stat-num" id="statEngg">0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Pharmacy Leads</span>
+        <div class="stat-num" id="statPharma">0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Nursing Leads</span>
+        <div class="stat-num" id="statNursing">0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Management Leads</span>
+        <div class="stat-num" id="statMgmt">0</div>
+      </div>
+    </section>
+
+    <section class="control-panel">
+      <div class="branch-tabs" id="branchTabsContainer">
+        <button class="tab-btn active" onclick="setBranchFilter('all', this)">All Inquiries</button>
+        <button class="tab-btn" onclick="setBranchFilter('Engineering', this)">Engineering</button>
+        <button class="tab-btn" onclick="setBranchFilter('Pharmacy', this)">Pharmacy</button>
+        <button class="tab-btn" onclick="setBranchFilter('Nursing', this)">Nursing</button>
+        <button class="tab-btn" onclick="setBranchFilter('Management', this)">Management &amp; IT</button>
+        <button class="tab-btn" onclick="setBranchFilter('Polytechnic', this)">Polytechnic</button>
+      </div>
+
+      <div class="action-group-right">
+        <button class="btn-action btn-accent" id="exportBtn" onclick="downloadBranchExcel()">
+          Download Excel (CSV) 📥
+        </button>
+      </div>
+    </section>
+
+    <main class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Student Name</th>
+            <th>Phone &amp; Email</th>
+            <th>City</th>
+            <th>Program &amp; Desk</th>
+            <th>Department</th>
+            <th>Lead Status</th>
+            <th>Assigned By</th>
+            <th>Immediate Action</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTableBody">
+          <tr><td colspan="9" class="empty-state">Connecting to institutional admissions database...</td></tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <!-- ==================== 2. NOTICES & CIRCULARS PANEL ==================== -->
+  <div class="workspace-panel" id="panel-notices">
+    <section class="control-panel">
+      <div class="branch-tabs" id="noticeCategoryTabs">
+        <button class="tab-btn active" onclick="setNoticeFilter('all', this)">All Circulars</button>
+        <button class="tab-btn" onclick="setNoticeFilter('ikgptu', this)">IKGPTU</button>
+        <button class="tab-btn" onclick="setNoticeFilter('pharma', this)">Pharmacy (PCI)</button>
+        <button class="tab-btn" onclick="setNoticeFilter('nursing', this)">Nursing (INC)</button>
+        <button class="tab-btn" onclick="setNoticeFilter('scholarship', this)">Scholarships &amp; Admin</button>
+        <button class="tab-btn" onclick="setNoticeFilter('career', this)">Placements</button>
+      </div>
+
+      <div class="action-group-right">
+        <button class="btn-action btn-accent" onclick="openNoticeEditor()">
+          + Publish New Notice
+        </button>
+      </div>
+    </section>
+
+    <main class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Ref No &amp; Date</th>
+            <th>Circular Headline &amp; Attached PDF</th>
+            <th>Category / Badge</th>
+            <th>Issuing Authority</th>
+            <th>Visibility</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminNoticesBody">
+          <tr><td colspan="6" class="empty-state">Loading notices...</td></tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <!-- ==================== 3. DEGREE PROGRAMS PANEL ==================== -->
+  <div class="workspace-panel" id="panel-programs">
+    <section class="control-panel">
+      <div class="branch-tabs" id="programCategoryTabs">
+        <button class="tab-btn active" onclick="setProgramFilter('all', this)">All Programs</button>
+        <button class="tab-btn" onclick="setProgramFilter('engineering', this)">Engineering</button>
+        <button class="tab-btn" onclick="setProgramFilter('pharma', this)">Pharmacy</button>
+        <button class="tab-btn" onclick="setProgramFilter('nursing', this)">Nursing &amp; Health</button>
+        <button class="tab-btn" onclick="setProgramFilter('mgmt', this)">Management</button>
+        <button class="tab-btn" onclick="setProgramFilter('vocational', this)">CS, BCA &amp; B.Voc</button>
+      </div>
+
+      <div class="action-group-right">
+        <button class="btn-action btn-accent" onclick="openProgramEditor()">
+          + Add Degree Program
+        </button>
+      </div>
+    </section>
+
+    <main class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Program Title &amp; Description</th>
+            <th>Category</th>
+            <th>Approval / Duration Tag</th>
+            <th>Eligibility</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminProgramsBody">
+          <tr><td colspan="7" class="empty-state">Loading degree catalog...</td></tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <!-- ==================== 4. SITE CONTENT & HIGHLIGHTS PANEL ==================== -->
+  <div class="workspace-panel" id="panel-content">
+    <section class="control-panel">
+      <div>
+        <h2 style="font-family:'Syne',sans-serif; font-size:1.2rem;">Live Website Content Manager</h2>
+        <p style="font-size:0.82rem; color:var(--text-muted);">Changes saved here are permanently persisted to the database and synced across the public website.</p>
+        <p id="storageBadge" style="font-size:0.78rem; font-weight:700; margin-top:0.35rem;"></p>
+      </div>
+      <div class="action-group-right">
+        <span id="cmsSaveStatus" style="font-size:0.85rem; font-weight:700;"></span>
+        <button type="button" class="btn-action btn-outline" onclick="resetSiteContent()">Reset Defaults</button>
+        <button type="button" id="btnSaveCms" class="btn-action btn-accent" onclick="saveSiteContent()">Save All Content 💾</button>
+      </div>
+    </section>
+
+    <form id="siteContentForm" onsubmit="event.preventDefault(); saveSiteContent();">
+      <div class="cms-grid">
+        <!-- Card 1: Hero & Admissions CTA -->
+        <div class="cms-card">
+          <h3>Hero Banner &amp; Admissions CTA</h3>
+          <p class="cms-sub">Controls the main landing hero headlines and admissions call-to-action banner.</p>
+
+          <div class="form-group">
+            <label for="cms_hero_pill">Hero Accreditation Pill</label>
+            <input type="text" id="cms_hero_pill" name="hero_pill" required>
+          </div>
+          <div class="form-grid" style="margin-top:0.5rem;">
+            <div class="form-group">
+              <label for="cms_hero_title_highlight">Hero Title (Gold Highlight)</label>
+              <input type="text" id="cms_hero_title_highlight" name="hero_title_highlight" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_hero_title_rest">Hero Title (White Text)</label>
+              <input type="text" id="cms_hero_title_rest" name="hero_title_rest" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cms_hero_subheadline">Hero Subheadline</label>
+            <input type="text" id="cms_hero_subheadline" name="hero_subheadline" required>
+          </div>
+          <div class="form-group">
+            <label for="cms_hero_subtitle">Hero Subtitle Paragraph</label>
+            <textarea id="cms_hero_subtitle" name="hero_subtitle" rows="3" required></textarea>
+          </div>
+
+          <hr style="border:0; border-top:1px solid var(--border); margin:1rem 0;">
+
+          <div class="form-group">
+            <label for="cms_cta_heading">Admissions Banner Heading (use {session} for dynamic year)</label>
+            <input type="text" id="cms_cta_heading" name="cta_heading" required>
+          </div>
+          <div class="form-group">
+            <label for="cms_cta_desc">Admissions Banner Description</label>
+            <textarea id="cms_cta_desc" name="cta_desc" rows="2" required></textarea>
+          </div>
+        </div>
+
+        <!-- Card 2: Placements, Campus Life & Contact Coordinates -->
+        <div class="cms-card">
+          <h3>Placements, Campus Life &amp; Contact Info</h3>
+          <p class="cms-sub">Update placement ratios, campus life spotlight, and official helpline coordinates.</p>
+
+          <div class="form-grid" style="margin-top:0;">
+            <div class="form-group">
+              <label for="cms_placement_rate">Placement Rate Stat</label>
+              <input type="text" id="cms_placement_rate" name="placement_rate" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_placement_partners_count">Recruiting Tie-ups Stat</label>
+              <input type="text" id="cms_placement_partners_count" name="placement_partners_count" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cms_placement_desc">Placement Cell Description</label>
+            <textarea id="cms_placement_desc" name="placement_desc" rows="2" required></textarea>
+          </div>
+
+          <hr style="border:0; border-top:1px solid var(--border); margin:1rem 0;">
+
+          <div class="form-grid" style="margin-top:0;">
+            <div class="form-group">
+              <label for="cms_campus_life_title">Campus Life Card Title</label>
+              <input type="text" id="cms_campus_life_title" name="campus_life_title" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_campus_life_img">Campus Life Photo URL / Filename</label>
+              <input type="text" id="cms_campus_life_img" name="campus_life_img" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cms_campus_life_caption">Campus Life Photo Caption</label>
+            <input type="text" id="cms_campus_life_caption" name="campus_life_caption" required>
+          </div>
+          <div class="form-group">
+            <label for="cms_campus_life_desc">Campus Life Summary</label>
+            <textarea id="cms_campus_life_desc" name="campus_life_desc" rows="2" required></textarea>
+          </div>
+
+          <hr style="border:0; border-top:1px solid var(--border); margin:1rem 0;">
+
+          <div class="form-grid" style="margin-top:0;">
+            <div class="form-group">
+              <label for="cms_helpline_phone">Helpline Phone</label>
+              <input type="text" id="cms_helpline_phone" name="helpline_phone" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_contact_email">Official Email</label>
+              <input type="email" id="cms_contact_email" name="contact_email" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_office_hours">Office Hours</label>
+              <input type="text" id="cms_office_hours" name="office_hours" required>
+            </div>
+            <div class="form-group">
+              <label for="cms_campus_address">Campus Address</label>
+              <input type="text" id="cms_campus_address" name="campus_address" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: National Highlights Ribbon (Full Width) -->
+        <div class="cms-card" style="grid-column: 1 / -1;">
+          <h3>National-Level Highlights &amp; Legacy Ribbon</h3>
+          <p class="cms-sub">Syncs across the Home Highlights Ribbon and About SGI Legacy numerical cards.</p>
+
+          <div class="cms-stat-row">
+            <div class="cms-stat-row-title">Highlight Slot 1 (Legacy Years)</div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>Stat Value</label><input type="text" id="cms_stat_years" name="stat_years" required></div>
+              <div class="form-group"><label>Title</label><input type="text" id="cms_stat_years_title" name="stat_years_title" required></div>
+              <div class="form-group"><label>Subtitle</label><input type="text" id="cms_stat_years_sub" name="stat_years_sub" required></div>
+            </div>
+          </div>
+
+          <div class="cms-stat-row">
+            <div class="cms-stat-row-title">Highlight Slot 2 (Alumni Network)</div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>Stat Value</label><input type="text" id="cms_stat_alumni" name="stat_alumni" required></div>
+              <div class="form-group"><label>Title</label><input type="text" id="cms_stat_alumni_title" name="stat_alumni_title" required></div>
+              <div class="form-group"><label>Subtitle</label><input type="text" id="cms_stat_alumni_sub" name="stat_alumni_sub" required></div>
+            </div>
+          </div>
+
+          <div class="cms-stat-row">
+            <div class="cms-stat-row-title">Highlight Slot 3 (Student Reach)</div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>Stat Value</label><input type="text" id="cms_stat_students" name="stat_students" required></div>
+              <div class="form-group"><label>Title</label><input type="text" id="cms_stat_students_title" name="stat_students_title" required></div>
+              <div class="form-group"><label>Subtitle</label><input type="text" id="cms_stat_students_sub" name="stat_students_sub" required></div>
+            </div>
+          </div>
+
+          <div class="cms-stat-row">
+            <div class="cms-stat-row-title">Highlight Slot 4 (Programs &amp; Tie-Ups)</div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>Stat Value</label><input type="text" id="cms_stat_tieups" name="stat_tieups" required></div>
+              <div class="form-group"><label>Title</label><input type="text" id="cms_stat_tieups_title" name="stat_tieups_title" required></div>
+              <div class="form-group"><label>Subtitle</label><input type="text" id="cms_stat_tieups_sub" name="stat_tieups_sub" required></div>
+            </div>
+          </div>
+
+          <div class="cms-stat-row" style="margin-bottom:0;">
+            <div class="cms-stat-row-title">Highlight Slot 5 (Awards &amp; Scholarships)</div>
+            <div class="form-grid-3">
+              <div class="form-group"><label>Stat Value</label><input type="text" id="cms_stat_awards" name="stat_awards" required></div>
+              <div class="form-group"><label>Title</label><input type="text" id="cms_stat_awards_title" name="stat_awards_title" required></div>
+              <div class="form-group"><label>Subtitle</label><input type="text" id="cms_stat_awards_sub" name="stat_awards_sub" required></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ==================== MODAL: NOTICE EDITOR (WITH PDF UPLOAD) ==================== -->
+  <div class="modal-backdrop" id="noticeEditorModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeNoticeEditor()">&times;</button>
+      <h3 id="noticeModalHeading" style="font-family:'Syne',sans-serif; font-size:1.35rem;">Publish Campus Notice</h3>
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">Attach the official PDF circular. Published notices immediately appear on the public Notice Board.</p>
+
+      <form id="noticeEditorForm" onsubmit="handleSaveNotice(event)">
+        <input type="hidden" id="editNoticeId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="noticeCategory">Category *</label>
+            <select id="noticeCategory" onchange="syncNoticeCategoryDefaults()" required>
+              <option value="ikgptu">IKGPTU Jalandhar</option>
+              <option value="pharma">Pharmacy (PCI)</option>
+              <option value="nursing">Nursing (INC/PNRC)</option>
+              <option value="scholarship">Scholarship &amp; Admin</option>
+              <option value="career">Placements &amp; Career</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="noticeBadgeClass">Badge Color Style *</label>
+            <select id="noticeBadgeClass" required>
+              <option value="badge-urgent">Red (Urgent / Exam)</option>
+              <option value="badge-scholar">Gold (Scholarship / Admin)</option>
+              <option value="badge-pharma">Green (Pharmacy)</option>
+              <option value="badge-nursing">Purple (Nursing)</option>
+              <option value="badge-career">Blue (Placements / Event)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="noticeBadgeText">Badge Label *</label>
+            <input type="text" id="noticeBadgeText" placeholder="e.g. University Exam" required>
+          </div>
+          <div class="form-group">
+            <label for="noticeDateLabel">Date / Session Label *</label>
+            <input type="text" id="noticeDateLabel" placeholder="e.g. 14 Nov 2026" required>
+          </div>
+          <div class="form-group">
+            <label for="noticeRefNo">Official Reference Number *</label>
+            <input type="text" id="noticeRefNo" placeholder="e.g. SGI/ACAD/2026/105" required>
+          </div>
+          <div class="form-group">
+            <label for="noticeAuthority">Issuing Authority *</label>
+            <input type="text" id="noticeAuthority" placeholder="e.g. Office of the Registrar, SGI" required>
+          </div>
+          <div class="form-group full-span">
+            <label for="noticeTitle">Notice Headline *</label>
+            <input type="text" id="noticeTitle" placeholder="Clear, official circular title..." required>
+          </div>
+          <div class="form-group full-span">
+            <label for="noticePdfFile" id="noticePdfLabel">Attach Circular PDF (.pdf) *</label>
+            <div class="pdf-dropzone">
+              <input type="file" id="noticePdfFile" accept="application/pdf,.pdf">
+              <div class="current-pdf-info" id="currentPdfInfo" style="display:none;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.3rem; flex-wrap:wrap; gap:0.8rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; cursor:pointer;">
+            <input type="checkbox" id="noticeIsActive" checked>
+            Publish immediately on public website
+          </label>
+          <div style="display:flex; gap:0.6rem;">
+            <button type="button" class="btn-action btn-outline" onclick="closeNoticeEditor()">Cancel</button>
+            <button type="submit" id="btnSaveNotice" class="btn-action btn-accent">Save Circular &rarr;</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: DEGREE PROGRAM EDITOR ==================== -->
+  <div class="modal-backdrop" id="programEditorModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeProgramEditor()">&times;</button>
+      <h3 id="programModalHeading" style="font-family:'Syne',sans-serif; font-size:1.35rem;">Add Degree Program</h3>
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">Updates the Degree Programs catalog and Apply Now modal choices automatically.</p>
+
+      <form id="programEditorForm" onsubmit="handleSaveProgram(event)">
+        <input type="hidden" id="editProgramId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="progCategory">Discipline Category *</label>
+            <select id="progCategory" required>
+              <option value="engineering">Engineering &amp; Tech</option>
+              <option value="pharma">Pharmacy</option>
+              <option value="nursing">Nursing &amp; Health</option>
+              <option value="mgmt">Management &amp; Commerce</option>
+              <option value="vocational">CS, BCA &amp; B.Voc</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="progOrder">Display Order (Number)</label>
+            <input type="number" id="progOrder" value="10" min="0" required>
+          </div>
+          <div class="form-group full-span">
+            <label for="progTitle">Degree / Program Title *</label>
+            <input type="text" id="progTitle" placeholder="e.g. B.Tech in Computer Science & Engineering" required>
+          </div>
+          <div class="form-group full-span">
+            <label for="progCode">Approvals &amp; Duration Badge *</label>
+            <input type="text" id="progCode" placeholder="e.g. AICTE • IKGPTU • 4 YEARS" required>
+          </div>
+          <div class="form-group full-span">
+            <label for="progDescription">Curriculum Overview *</label>
+            <textarea id="progDescription" rows="3" placeholder="Key specializations, labs, and career focus..." required></textarea>
+          </div>
+          <div class="form-group full-span">
+            <label for="progEligibility">Eligibility Criteria *</label>
+            <input type="text" id="progEligibility" placeholder="e.g. Eligibility: 10+2 with Physics & Mathematics / JEE" required>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.3rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; cursor:pointer;">
+            <input type="checkbox" id="progIsActive" checked>
+            Visible on public website
+          </label>
+          <div style="display:flex; gap:0.6rem;">
+            <button type="button" class="btn-action btn-outline" onclick="closeProgramEditor()">Cancel</button>
+            <button type="submit" class="btn-action btn-accent">Save Program &rarr;</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: MY PROFILE & PHOTO UPLOAD ==================== -->
+  <div class="modal-backdrop" id="myProfileModal">
+    <div class="modal-card" style="max-width:560px;">
+      <button class="modal-close" onclick="closeMyProfileModal()">&times;</button>
+      <h3 style="font-family:'Syne',sans-serif; font-size:1.35rem;">My Staff Profile &amp; Photo</h3>
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">Upload and crop your profile photo. It appears in the Admin Portal and on the Live Website team directory.</p>
+
+      <div class="my-profile-hero">
+        <div class="my-profile-avatar-lg" id="myProfileAvatarLg">DA</div>
+        <div style="flex:1; min-width:180px;">
+          <div id="myProfileNameLg" style="font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800;">Director of Admissions</div>
+          <div id="myProfileMetaLg" style="font-size:0.82rem; color:var(--accent-bright); font-weight:700; margin-top:0.2rem;">SUPER_ADMIN • All</div>
+          <div id="myProfileUsernameLg" style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">Username: admin</div>
+        </div>
+      </div>
+
+      <input type="file" id="selfAvatarFileInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleAvatarFileChosen(event, { mode: 'self' })">
+
+      <div style="display:flex; gap:0.7rem; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-top:1rem;">
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <button type="button" class="btn-action btn-accent" onclick="document.getElementById('selfAvatarFileInput').click()">
+            📷 Upload &amp; Crop Photo
+          </button>
+          <button type="button" id="btnRemoveSelfAvatar" class="btn-action btn-danger-sm" style="display:none;" onclick="removeSelfAvatar()">
+            Remove Photo
+          </button>
+        </div>
+        <button type="button" class="btn-action btn-outline" onclick="closeMyProfileModal()">Close</button>
+      </div>
+      <div id="myProfileStatus" style="margin-top:0.85rem; font-size:0.84rem; font-weight:700;"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: STAFF MANAGEMENT (ADD / PHOTO / ENABLE-DISABLE / DELETE) ==================== -->
+  <div class="modal-backdrop" id="staffModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeStaffModal()">&times;</button>
+      <h3 style="font-family:'Syne',sans-serif; font-size:1.4rem;">Director Console: Staff Management</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.2rem;">Add faculty/counselor accounts with custom cropped profile photos, enable or disable access, or delete profiles.</p>
+
+      <form id="createStaffForm" onsubmit="handleCreateStaff(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="staffFullName" placeholder="e.g. Dr. Harpreet Singh" required>
+          </div>
+          <div class="form-group">
+            <label>Username / Login ID</label>
+            <input type="text" id="staffUsername" placeholder="e.g. harpreet.pharmacy" required>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select id="staffRole" required>
+              <option value="counselor">Admission Counselor</option>
+              <option value="hod">Department HOD</option>
+              <option value="super_admin">Super Admin / Principal</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assigned Department</label>
+            <select id="staffDept" required>
+              <option value="All">All Departments (Full Access)</option>
+              <option value="Pharmacy">Sukhjinder College of Pharmacy</option>
+              <option value="Nursing">Sukhjinder College of Nursing</option>
+              <option value="Engineering">SCET (Engineering &amp; Tech)</option>
+              <option value="Management & IT">SIMT (Management &amp; IT)</option>
+              <option value="Polytechnic">Polytechnic College</option>
+            </select>
+          </div>
+          <div class="form-group full-span">
+            <label>Temporary Account Password</label>
+            <input type="text" id="staffPassword" placeholder="e.g. SGIStaff@2026" required>
+          </div>
+          <div class="form-group full-span">
+            <label>Profile Photo (JPG, PNG, WebP — Optional, with Interactive Cropper)</label>
+            <div class="staff-photo-picker-box">
+              <div class="staff-avatar-thumb" id="newStaffAvatarPreview">👤</div>
+              <div style="flex:1; min-width:190px;">
+                <div style="font-size:0.82rem; font-weight:700;" id="newStaffPhotoLabel">No photo selected (will show initials)</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Upload a photo to zoom, pan, and crop into a clean avatar.</div>
+              </div>
+              <input type="file" id="newStaffAvatarFileInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleAvatarFileChosen(event, { mode: 'new-staff' })">
+              <button type="button" class="btn-action btn-photo-sm" onclick="document.getElementById('newStaffAvatarFileInput').click()">
+                📷 Choose &amp; Crop
+              </button>
+              <button type="button" id="btnClearNewStaffPhoto" class="btn-action btn-danger-sm" style="display:none;" onclick="clearNewStaffPhoto()">
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem; gap:0.8rem; flex-wrap:wrap;">
+          <span id="staffFormStatus" style="font-size:0.85rem; font-weight:600;"></span>
+          <button type="submit" id="btnCreateStaff" class="btn-action btn-accent">+ Add Staff Member &rarr;</button>
+        </div>
+      </form>
+
+      <input type="file" id="existingStaffAvatarInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleExistingStaffFileChosen(event)">
+
+      <h4 style="font-size:0.95rem; margin:1.8rem 0 0.8rem; border-top:1px solid var(--border); padding-top:1rem;">Registered Faculty &amp; Counselor Accounts</h4>
+      <div id="staffListContainer" style="max-height:300px; overflow-y:auto; font-size:0.85rem;">
+        Loading staff directory...
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: INTERACTIVE IMAGE CROPPER ==================== -->
+  <div class="modal-backdrop cropper-layer" id="avatarCropperModal">
+    <div class="modal-card" style="max-width:700px;">
+      <button class="modal-close" onclick="closeAvatarCropper()">&times;</button>
+      <h3 style="font-family:'Syne',sans-serif; font-size:1.35rem;">Crop Profile Photo</h3>
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-top:0.2rem;">Drag to pan, use the zoom slider or mouse wheel to frame your face inside the circle.</p>
+
+      <div class="cropper-layout">
+        <div class="cropper-stage-wrap">
+          <div class="cropper-viewport" id="cropperViewport">
+            <canvas id="cropperCanvas" width="300" height="300"></canvas>
+            <div class="cropper-circle-guide"></div>
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-muted);">Drag image to reposition • Scroll or slide to zoom</span>
+        </div>
+
+        <div class="cropper-controls">
+          <div class="cropper-preview-box">
+            <div class="cropper-preview-circle">
+              <canvas id="cropperPreviewCircle" width="120" height="120" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+            <div class="cropper-preview-square">
+              <canvas id="cropperPreviewSquare" width="120" height="120" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.4;">
+              <strong style="color:#fff; display:block; margin-bottom:0.2rem;">Live Output Preview</strong>
+              400 × 400 px clean square/circular crop
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="cropperZoomSlider">Zoom (<span id="cropperZoomLabel">1.00×</span>)</label>
+            <div class="cropper-slider-row">
+              <button type="button" class="btn-act btn-call" onclick="nudgeCropZoom(-0.15)">−</button>
+              <input type="range" id="cropperZoomSlider" min="1" max="3.5" step="0.02" value="1" oninput="handleCropZoomSlider(this.value)">
+              <button type="button" class="btn-act btn-call" onclick="nudgeCropZoom(0.15)">+</button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <button type="button" class="btn-action btn-outline" onclick="rotateCropImage(90)">↻ Rotate 90°</button>
+            <button type="button" class="btn-action btn-outline" onclick="resetCropTransform()">↺ Reset View</button>
+          </div>
+
+          <div id="cropperStatusMsg" style="font-size:0.82rem; font-weight:700; min-height:1.1rem;"></div>
+
+          <div style="display:flex; gap:0.7rem; justify-content:flex-end; margin-top:0.5rem; flex-wrap:wrap;">
+            <button type="button" class="btn-action btn-outline" onclick="closeAvatarCropper()">Cancel</button>
+            <button type="button" id="btnApplyCrop" class="btn-action btn-accent" onclick="applyAndSaveCrop()">Crop &amp; Save Photo ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Admin Toast -->
+  <div id="adminToast" class="admin-toast" role="status" aria-live="polite"></div>
+
+  <script>
+    if (!sessionStorage.getItem('sgi_admin_active')) {
+      window.location.replace('/admin/login');
+    }
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted && !sessionStorage.getItem('sgi_admin_active')) {
+        window.location.replace('/admin/login');
+      }
+    });
+
+    function handleLogout() {
+      sessionStorage.removeItem('sgi_admin_active');
+      window.location.replace('/admin/logout');
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getInitials(name) {
+      const clean = (name || 'SG').trim();
+      const parts = clean.split(/\s+/).filter(Boolean);
+      if (parts.length > 1) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return clean.slice(0, 2).toUpperCase();
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('adminToast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.toggle('error', isError);
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3600);
+    }
+
+    // Cross-Tab Live Website Sync Broadcaster
+    const cmsChannel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('sgi_cms_sync') : null;
+    function broadcastLiveSync(kind = 'all') {
+      const ts = String(Date.now());
+      try {
+        localStorage.setItem('sgi_cms_sync_ts', ts);
+        localStorage.setItem('sgi_cms_sync_kind', kind);
+      } catch (_) {}
+      if (cmsChannel) {
+        try {
+          cmsChannel.postMessage({ type: 'sync', kind, ts });
+        } catch (_) {}
+      }
+    }
+
+    let activeBranch = 'all';
+    let currentUser = null;
+    let allNotices = [];
+    let activeNoticeFilter = 'all';
+    let allPrograms = [];
+    let activeProgramFilter = 'all';
+    let staffRosterCache = [];
+
+    // Pending cropped blob for "Add Staff Member" form
+    let newStaffCroppedBlob = null;
+    let newStaffPreviewUrl = '';
+    let targetExistingStaffId = null;
+
+    /* ========================================================
+       WORKSPACE SWITCHING & PROFILE LOADING
+       ======================================================== */
+    function switchWorkspace(workspaceId, btn) {
+      document.querySelectorAll('.ws-tab').forEach(t => t.classList.remove('active'));
+      if (btn) {
+        btn.classList.add('active');
+      } else {
+        const matched = document.querySelector(`.ws-tab[data-workspace="${workspaceId}"]`);
+        if (matched) matched.classList.add('active');
+      }
+
+      document.querySelectorAll('.workspace-panel').forEach(p => p.classList.remove('active'));
+      const targetPanel = document.getElementById(`panel-${workspaceId}`);
+      if (targetPanel) targetPanel.classList.add('active');
+
+      try {
+        sessionStorage.setItem('sgi_active_workspace', workspaceId);
+      } catch (_) {}
+
+      if (workspaceId === 'notices') loadAdminNotices();
+      if (workspaceId === 'programs') loadAdminPrograms();
+      if (workspaceId === 'content') loadSiteContent();
+    }
+
+    function renderAvatarNode(containerEl, avatarUrl, fullName) {
+      if (!containerEl) return;
+      const initials = getInitials(fullName);
+      if (avatarUrl) {
+        const safeUrl = escapeHtml(avatarUrl);
+        containerEl.innerHTML = `<img src="${safeUrl}" alt="${escapeHtml(fullName)}" onerror="this.parentElement.textContent='${escapeHtml(initials)}'">`;
+      } else {
+        containerEl.textContent = initials;
+      }
+    }
+
+    async function loadUserProfile() {
+      try {
+        const res = await fetch(`/api/admin/profile?_=${Date.now()}`, {
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        currentUser = await res.json();
+
+        document.getElementById('userNameDisplay').textContent = currentUser.name;
+        document.getElementById('userRoleDeptDisplay').textContent = `${currentUser.role.toUpperCase()} • ${currentUser.department}`;
+        renderAvatarNode(document.getElementById('userAvatar'), currentUser.avatar_url, currentUser.name);
+
+        if (currentUser.role === 'super_admin') {
+          document.getElementById('btnManageStaff').style.display = 'inline-flex';
+          document.getElementById('tabPrograms').style.display = 'inline-flex';
+          document.getElementById('tabContent').style.display = 'inline-flex';
+        } else {
+          if (currentUser.role === 'hod') {
+            document.getElementById('tabPrograms').style.display = 'inline-flex';
+          }
+          if (currentUser.department !== 'All') {
+            activeBranch = currentUser.department;
+            document.getElementById('branchTabsContainer').innerHTML = `
+              <button class="tab-btn active">${escapeHtml(currentUser.department)} Department Leads</button>
+            `;
+          }
+        }
+
+        // Restore active workspace across page refreshes
+        const savedWs = sessionStorage.getItem('sgi_active_workspace');
+        if (savedWs && savedWs !== 'crm') {
+          const tabEl = document.querySelector(`.ws-tab[data-workspace="${savedWs}"]`);
+          if (tabEl && tabEl.style.display !== 'none') {
+            switchWorkspace(savedWs, tabEl);
+          }
+        }
+      } catch (e) {
+        console.error("Profile load error:", e);
+      }
+    }
+
+    /* ========================================================
+       MY PROFILE MODAL (OWN AVATAR UPLOAD & CROP)
+       ======================================================== */
+    function openMyProfileModal() {
+      if (!currentUser) return;
+      document.getElementById('myProfileStatus').textContent = '';
+      document.getElementById('myProfileNameLg').textContent = currentUser.name;
+      document.getElementById('myProfileMetaLg').textContent = `${currentUser.role.toUpperCase()} • ${currentUser.department}`;
+      document.getElementById('myProfileUsernameLg').textContent = `Username: ${currentUser.username}`;
+      renderAvatarNode(document.getElementById('myProfileAvatarLg'), currentUser.avatar_url, currentUser.name);
+      document.getElementById('btnRemoveSelfAvatar').style.display = currentUser.avatar_url ? 'inline-flex' : 'none';
+      document.getElementById('myProfileModal').classList.add('open');
+    }
+
+    function closeMyProfileModal() {
+      document.getElementById('myProfileModal').classList.remove('open');
+    }
+
+    async function removeSelfAvatar() {
+      const statusEl = document.getElementById('myProfileStatus');
+      statusEl.textContent = 'Removing photo...';
+      statusEl.style.color = 'var(--text-muted)';
+      try {
+        const res = await fetch('/api/admin/profile/avatar', {
+          method: 'DELETE',
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        if (res.ok && data.success) {
+          currentUser.avatar_url = '';
+          renderAvatarNode(document.getElementById('userAvatar'), '', currentUser.name);
+          renderAvatarNode(document.getElementById('myProfileAvatarLg'), '', currentUser.name);
+          document.getElementById('btnRemoveSelfAvatar').style.display = 'none';
+          statusEl.textContent = '✓ Profile photo removed.';
+          statusEl.style.color = '#34d399';
+          broadcastLiveSync('staff');
+          showToast('✓ Profile photo removed');
+          if (document.getElementById('staffModal').classList.contains('open')) {
+            loadStaffRoster();
+          }
+        } else {
+          statusEl.textContent = data.message || 'Could not remove photo.';
+          statusEl.style.color = 'var(--logout-red)';
+        }
+      } catch (err) {
+        statusEl.textContent = 'Network error.';
+        statusEl.style.color = 'var(--logout-red)';
+      }
+    }
+
+    /* ========================================================
+       1. ADMISSIONS CRM LOGIC
+       ======================================================== */
+    function setBranchFilter(branch, btnElem) {
+      activeBranch = branch;
+      document.querySelectorAll('#branchTabsContainer .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btnElem) btnElem.classList.add('active');
+      document.getElementById('exportBtn').textContent = `Download ${branch === 'all' ? 'All' : branch} Excel 📥`;
+      loadLeads();
+    }
+
+    function downloadBranchExcel() {
+      window.location.href = `/api/export-leads?branch=${encodeURIComponent(activeBranch)}`;
+    }
+
+    async function loadLeads() {
+      try {
+        const url = activeBranch === 'all' ? '/api/leads' : `/api/leads?branch=${encodeURIComponent(activeBranch)}`;
+        const res = await fetch(url, { credentials: 'same-origin', cache: 'no-store' });
+        if (res.status === 401) { handleLogout(); return; }
+
+        const data = await res.json();
+        const tbody = document.getElementById('leadsTableBody');
+
+        if (!data.leads || data.leads.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="9" class="empty-state">No inquiries recorded for ${escapeHtml(activeBranch === 'all' ? 'any branch' : activeBranch)} yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.leads.map(lead => {
+          const cleanPhone = lead.phone.replace(/[^0-9]/g, '');
+          const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+          const waMsg = encodeURIComponent(`Hello ${lead.name}, this is ${currentUser ? currentUser.name : 'Admissions Desk'} from Sukhjinder Group of Institutes (SGI), Gurdaspur regarding your inquiry for ${lead.program}.`);
+
+          return `
+            <tr>
+              <td>#${lead.id}</td>
+              <td style="font-weight:700;">${escapeHtml(lead.name)}</td>
+              <td>
+                <div>${escapeHtml(lead.phone)}</div>
+                <div style="font-size:0.76rem; color:var(--text-muted);">${escapeHtml(lead.email)}</div>
+              </td>
+              <td>${escapeHtml(lead.city)}</td>
+              <td>
+                <div style="font-weight:600;">${escapeHtml(lead.program)}</div>
+                <div style="font-size:0.75rem; color:var(--accent-bright);">${escapeHtml(lead.inquiry_type)}</div>
+              </td>
+              <td><span class="branch-pill">${escapeHtml(lead.branch)}</span></td>
+              <td>
+                <select class="status-select" onchange="updateLeadStatus(${lead.id}, this.value, this)">
+                  <option value="New Inquiry" ${lead.status === 'New Inquiry' ? 'selected' : ''}>🟡 New Inquiry</option>
+                  <option value="Contacted" ${lead.status === 'Contacted' ? 'selected' : ''}>🔵 Contacted</option>
+                  <option value="Campus Visit" ${lead.status === 'Campus Visit' ? 'selected' : ''}>🟣 Campus Visit</option>
+                  <option value="Admitted" ${lead.status === 'Admitted' ? 'selected' : ''}>🟢 Admitted</option>
+                  <option value="Closed" ${lead.status === 'Closed' ? 'selected' : ''}>⚪ Closed</option>
+                </select>
+              </td>
+              <td style="font-size:0.82rem; color:var(--text-muted);">${escapeHtml(lead.last_contacted_by)}</td>
+              <td>
+                <div style="display:flex; gap:0.4rem;">
+                  <a href="https://wa.me/${waPhone}?text=${waMsg}" target="_blank" class="btn-act btn-wa" onclick="markContacted(${lead.id})">WhatsApp 💬</a>
+                  <a href="tel:${cleanPhone}" class="btn-act btn-call" onclick="markContacted(${lead.id})">Call 📞</a>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error("Sync error:", err);
+      }
+    }
+
+    async function updateLeadStatus(leadId, status, selectElem) {
+      try {
+        const res = await fetch(`/api/leads/update-status/${leadId}`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        if (res.ok && selectElem.style) {
+          selectElem.style.borderColor = 'var(--green)';
+          setTimeout(() => { selectElem.style.borderColor = 'var(--border)'; }, 1500);
+        }
+      } catch (e) {
+        console.error("Status update error:", e);
+      }
+    }
+
+    function markContacted(leadId) {
+      updateLeadStatus(leadId, 'Contacted', {});
+    }
+
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/admin/stats', { credentials: 'same-origin', cache: 'no-store' });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        document.getElementById('statTotal').textContent = data.total;
+        document.getElementById('statEngg').textContent = data.engineering;
+        document.getElementById('statPharma').textContent = data.pharmacy;
+        document.getElementById('statNursing').textContent = data.nursing;
+        document.getElementById('statMgmt').textContent = data.management;
+      } catch (err) {
+        console.error("Stats error:", err);
+      }
+    }
+
+    /* ========================================================
+       2. NOTICES & CIRCULARS MANAGEMENT (PDF ATTACHMENTS)
+       ======================================================== */
+    const NOTICE_CATEGORY_MAP = {
+      ikgptu: { label: 'IKGPTU Jalandhar', badge: 'University Exam', badgeClass: 'badge-urgent' },
+      pharma: { label: 'Pharmacy (PCI)', badge: 'PCI Council', badgeClass: 'badge-pharma' },
+      nursing: { label: 'Nursing (INC/PNRC)', badge: 'Nursing Board', badgeClass: 'badge-nursing' },
+      scholarship: { label: 'Scholarship & Admin', badge: 'Govt Scholarship', badgeClass: 'badge-scholar' },
+      career: { label: 'Placements & Career', badge: 'Placement Drive', badgeClass: 'badge-career' }
+    };
+
+    function setNoticeFilter(cat, btn) {
+      activeNoticeFilter = cat;
+      document.querySelectorAll('#noticeCategoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderAdminNotices();
+    }
+
+    async function loadAdminNotices() {
+      try {
+        const res = await fetch(`/api/admin/notices?_=${Date.now()}`, { credentials: 'same-origin', cache: 'no-store' });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        allNotices = data.notices || [];
+        renderAdminNotices();
+      } catch (e) {
+        console.error("Notices fetch error:", e);
+      }
+    }
+
+    function renderAdminNotices() {
+      const tbody = document.getElementById('adminNoticesBody');
+      const filtered = activeNoticeFilter === 'all'
+        ? allNotices
+        : allNotices.filter(n => n.category === activeNoticeFilter);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No circulars found in this category. Click "+ Publish New Notice" to attach and publish a PDF.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(n => {
+        const pdfBadge = n.pdf_url
+          ? `<a href="${escapeHtml(n.pdf_url)}" target="_blank" rel="noopener noreferrer" class="pdf-link-pill">📄 ${escapeHtml(n.pdf_filename || 'View Attached PDF')} ↗</a>`
+          : `<span style="display:inline-block; margin-top:0.3rem; font-size:0.74rem; color:var(--text-muted);">Auto-generated circular (no PDF attached)</span>`;
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight:700; color:var(--accent-bright);">${escapeHtml(n.ref_no)}</div>
+              <div style="font-size:0.76rem; color:var(--text-muted);">${escapeHtml(n.date)}</div>
+            </td>
+            <td style="max-width:420px;">
+              <div style="font-weight:700;">${escapeHtml(n.title)}</div>
+              <div>${pdfBadge}</div>
+            </td>
+            <td>
+              <span class="branch-pill">${escapeHtml(n.category_label)}</span>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">Badge: ${escapeHtml(n.badge)}</div>
+            </td>
+            <td style="font-size:0.82rem;">${escapeHtml(n.authority)}</td>
+            <td>
+              <span class="${n.is_active ? 'status-pill-active' : 'status-pill-archived'}">
+                ${n.is_active ? '● Published' : '○ Archived'}
+              </span>
+            </td>
+            <td>
+              <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                <button class="btn-act btn-call" onclick="openNoticeEditor(${n.id})">✏️ Edit</button>
+                <button class="btn-act btn-call" onclick="toggleNoticeActive(${n.id}, ${n.is_active ? 0 : 1})">
+                  ${n.is_active ? 'Archive' : 'Publish'}
+                </button>
+                <button class="btn-act btn-danger-sm" onclick="deleteNotice(${n.id})">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function syncNoticeCategoryDefaults() {
+      if (document.getElementById('editNoticeId').value) return;
+      const cat = document.getElementById('noticeCategory').value;
+      const meta = NOTICE_CATEGORY_MAP[cat];
+      if (meta) {
+        document.getElementById('noticeBadgeClass').value = meta.badgeClass;
+        document.getElementById('noticeBadgeText').value = meta.badge;
+      }
+    }
+
+    function openNoticeEditor(noticeId = null) {
+      const form = document.getElementById('noticeEditorForm');
+      form.reset();
+      document.getElementById('editNoticeId').value = '';
+      document.getElementById('noticePdfFile').value = '';
+      const currentPdfInfo = document.getElementById('currentPdfInfo');
+      const pdfLabel = document.getElementById('noticePdfLabel');
+
+      if (noticeId) {
+        const n = allNotices.find(item => item.id === noticeId);
+        if (!n) return;
+        document.getElementById('noticeModalHeading').textContent = 'Edit Campus Circular';
+        document.getElementById('editNoticeId').value = n.id;
+        document.getElementById('noticeCategory').value = n.category;
+        document.getElementById('noticeBadgeClass').value = n.badge_class || 'badge-scholar';
+        document.getElementById('noticeBadgeText').value = n.badge;
+        document.getElementById('noticeDateLabel').value = n.date;
+        document.getElementById('noticeRefNo').value = n.ref_no;
+        document.getElementById('noticeAuthority').value = n.authority;
+        document.getElementById('noticeTitle').value = n.title;
+        document.getElementById('noticeIsActive').checked = Boolean(n.is_active);
+
+        if (n.pdf_url) {
+          pdfLabel.textContent = 'Replace Attached PDF (Optional)';
+          currentPdfInfo.style.display = 'flex';
+          currentPdfInfo.innerHTML = `
+            <span>Current PDF:</span>
+            <a href="${escapeHtml(n.pdf_url)}" target="_blank" rel="noopener noreferrer" class="pdf-link-pill" style="margin-top:0;">
+              📄 ${escapeHtml(n.pdf_filename || 'View Current PDF')} ↗
+            </a>
+          `;
+        } else {
+          pdfLabel.textContent = 'Attach Circular PDF (.pdf)';
+          currentPdfInfo.style.display = 'flex';
+          currentPdfInfo.innerHTML = '<span>No PDF uploaded yet. Select a PDF file to attach.</span>';
+        }
+      } else {
+        document.getElementById('noticeModalHeading').textContent = 'Publish Campus Notice';
+        document.getElementById('noticeDateLabel').value = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        document.getElementById('noticeIsActive').checked = true;
+        pdfLabel.textContent = 'Attach Circular PDF (.pdf) *';
+        currentPdfInfo.style.display = 'none';
+        currentPdfInfo.innerHTML = '';
+        syncNoticeCategoryDefaults();
+      }
+
+      document.getElementById('noticeEditorModal').classList.add('open');
+    }
+
+    function closeNoticeEditor() {
+      document.getElementById('noticeEditorModal').classList.remove('open');
+    }
+
+    async function handleSaveNotice(e) {
+      e.preventDefault();
+      const noticeId = document.getElementById('editNoticeId').value;
+      const fileInput = document.getElementById('noticePdfFile');
+      const selectedFile = fileInput.files[0];
+
+      if (!noticeId && !selectedFile) {
+        alert('Please attach a PDF file for this notice.');
+        return;
+      }
+
+      if (selectedFile && !selectedFile.name.toLowerCase().endsWith('.pdf')) {
+        alert('Only PDF (.pdf) files are allowed.');
+        return;
+      }
+
+      const category = document.getElementById('noticeCategory').value;
+      const categoryLabel = (NOTICE_CATEGORY_MAP[category] && NOTICE_CATEGORY_MAP[category].label) || category;
+
+      const formData = new FormData();
+      formData.append('category', category);
+      formData.append('category_label', categoryLabel);
+      formData.append('badge_class', document.getElementById('noticeBadgeClass').value);
+      formData.append('badge', document.getElementById('noticeBadgeText').value.trim());
+      formData.append('date', document.getElementById('noticeDateLabel').value.trim());
+      formData.append('ref_no', document.getElementById('noticeRefNo').value.trim());
+      formData.append('authority', document.getElementById('noticeAuthority').value.trim());
+      formData.append('title', document.getElementById('noticeTitle').value.trim());
+      formData.append('is_active', document.getElementById('noticeIsActive').checked ? '1' : '0');
+      if (selectedFile) {
+        formData.append('pdf_file', selectedFile);
+      }
+
+      const saveBtn = document.getElementById('btnSaveNotice');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Uploading...';
+
+      try {
+        const url = noticeId ? `/api/admin/notices/${noticeId}` : '/api/admin/notices';
+        const method = noticeId ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          credentials: 'same-origin',
+          body: formData
+        });
+
+        if (res.status === 401) { handleLogout(); return; }
+
+        const rawText = await res.text();
+        let data = {};
+        try {
+          data = rawText ? JSON.parse(rawText) : {};
+        } catch (_) {}
+
+        if (res.ok && data.success) {
+          closeNoticeEditor();
+          await loadAdminNotices();
+          broadcastLiveSync('notices');
+          showToast('✓ Circular saved & synced to live website');
+        } else {
+          alert(data.message || data.error || `Server error (${res.status}) while saving circular.`);
+        }
+      } catch (err) {
+        alert(`Network error while uploading circular: ${err.message || 'Could not reach server'}`);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Circular →';
+      }
+    }
+
+    async function toggleNoticeActive(noticeId, newState) {
+      const res = await fetch(`/api/admin/notices/${noticeId}`, {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: newState })
+      });
+      if (res.ok) {
+        await loadAdminNotices();
+        broadcastLiveSync('notices');
+      }
+    }
+
+    async function deleteNotice(noticeId) {
+      if (!confirm('Permanently delete this circular and its attached PDF?')) return;
+      const res = await fetch(`/api/admin/notices/${noticeId}`, {
+        method: 'DELETE',
+        credentials: 'same-origin'
+      });
+      if (res.ok) {
+        await loadAdminNotices();
+        broadcastLiveSync('notices');
+      }
+    }
+
+    /* ========================================================
+       3. DEGREE PROGRAMS MANAGEMENT
+       ======================================================== */
+    const PROGRAM_CATEGORY_NAMES = {
+      engineering: 'Engineering & Tech',
+      pharma: 'Pharmacy',
+      nursing: 'Nursing & Health',
+      mgmt: 'Management & Commerce',
+      vocational: 'CS, BCA & B.Voc'
+    };
+
+    function setProgramFilter(cat, btn) {
+      activeProgramFilter = cat;
+      document.querySelectorAll('#programCategoryTabs .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderAdminPrograms();
+    }
+
+    async function loadAdminPrograms() {
+      try {
+        const res = await fetch(`/api/admin/programs?_=${Date.now()}`, { credentials: 'same-origin', cache: 'no-store' });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        allPrograms = data.programs || [];
+        renderAdminPrograms();
+      } catch (e) {
+        console.error("Programs load error:", e);
+      }
+    }
+
+    function renderAdminPrograms() {
+      const tbody = document.getElementById('adminProgramsBody');
+      const filtered = activeProgramFilter === 'all'
+        ? allPrograms
+        : allPrograms.filter(p => p.category === activeProgramFilter);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No degree programs found in this discipline.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td>${p.display_order}</td>
+          <td style="max-width:340px;">
+            <div style="font-weight:700;">${escapeHtml(p.title)}</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">${escapeHtml(p.description)}</div>
+          </td>
+          <td><span class="branch-pill">${escapeHtml(PROGRAM_CATEGORY_NAMES[p.category] || p.category)}</span></td>
+          <td style="font-size:0.8rem; font-weight:700; color:var(--accent-bright);">${escapeHtml(p.code)}</td>
+          <td style="font-size:0.8rem;">${escapeHtml(p.eligibility)}</td>
+          <td>
+            <span class="${p.is_active ? 'status-pill-active' : 'status-pill-archived'}">
+              ${p.is_active ? '● Visible' : '○ Hidden'}
+            </span>
+          </td>
+          <td>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button class="btn-act btn-call" onclick="openProgramEditor(${p.id})">✏️ Edit</button>
+              <button class="btn-act btn-call" onclick="toggleProgramActive(${p.id}, ${p.is_active ? 0 : 1})">
+                ${p.is_active ? 'Hide' : 'Show'}
+              </button>
+              <button class="btn-act btn-danger-sm" onclick="deleteProgram(${p.id})">🗑️</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openProgramEditor(progId = null) {
+      const form = document.getElementById('programEditorForm');
+      form.reset();
+      document.getElementById('editProgramId').value = '';
+
+      if (progId) {
+        const p = allPrograms.find(item => item.id === progId);
+        if (!p) return;
+        document.getElementById('programModalHeading').textContent = 'Edit Degree Program';
+        document.getElementById('editProgramId').value = p.id;
+        document.getElementById('progCategory').value = p.category;
+        document.getElementById('progOrder').value = p.display_order;
+        document.getElementById('progTitle').value = p.title;
+        document.getElementById('progCode').value = p.code;
+        document.getElementById('progDescription').value = p.description;
+        document.getElementById('progEligibility').value = p.eligibility;
+        document.getElementById('progIsActive').checked = Boolean(p.is_active);
+      } else {
+        document.getElementById('programModalHeading').textContent = 'Add Degree Program';
+        document.getElementById('progOrder').value = allPrograms.length + 1;
+        document.getElementById('progIsActive').checked = true;
+      }
+
+      document.getElementById('programEditorModal').classList.add('open');
+    }
+
+    function closeProgramEditor() {
+      document.getElementById('programEditorModal').classList.remove('open');
+    }
+
+    async function handleSaveProgram(e) {
+      e.preventDefault();
+      const progId = document.getElementById('editProgramId').value;
+      const payload = {
+        category: document.getElementById('progCategory').value,
+        display_order: parseInt(document.getElementById('progOrder').value, 10) || 0,
+        title: document.getElementById('progTitle').value.trim(),
+        code: document.getElementById('progCode').value.trim(),
+        description: document.getElementById('progDescription').value.trim(),
+        eligibility: document.getElementById('progEligibility').value.trim(),
+        is_active: document.getElementById('progIsActive').checked ? 1 : 0
+      };
+
+      const url = progId ? `/api/admin/programs/${progId}` : '/api/admin/programs';
+      const method = progId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        closeProgramEditor();
+        await loadAdminPrograms();
+        broadcastLiveSync('programs');
+        showToast('✓ Degree program saved & synced');
+      } else {
+        const err = await res.json();
+        alert(err.message || 'Failed to save degree program.');
+      }
+    }
+
+    async function toggleProgramActive(progId, newState) {
+      const p = allPrograms.find(item => item.id === progId);
+      if (!p) return;
+      const res = await fetch(`/api/admin/programs/${progId}`, {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...p, is_active: newState })
+      });
+      if (res.ok) {
+        await loadAdminPrograms();
+        broadcastLiveSync('programs');
+      }
+    }
+
+    async function deleteProgram(progId) {
+      if (!confirm('Remove this degree program from the catalog?')) return;
+      const res = await fetch(`/api/admin/programs/${progId}`, {
+        method: 'DELETE',
+        credentials: 'same-origin'
+      });
+      if (res.ok) {
+        await loadAdminPrograms();
+        broadcastLiveSync('programs');
+      }
+    }
+
+    /* ========================================================
+       4. DYNAMIC SITE CONTENT & HIGHLIGHTS MANAGER (PERSISTED + SYNCED)
+       ======================================================== */
+    function populateSiteContentForm(content) {
+      if (!content || typeof content !== 'object') return;
+      Object.keys(content).forEach(key => {
+        const input = document.getElementById(`cms_${key}`);
+        if (input) input.value = content[key];
+      });
+    }
+
+    async function loadStorageStatus() {
+      const badge = document.getElementById('storageBadge');
+      if (!badge) return;
+      try {
+        const res = await fetch(`/api/admin/storage-status?_=${Date.now()}`, { credentials: 'same-origin', cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const s = await res.json();
+        if (s.persistent) {
+          badge.textContent = '🟢 Permanent storage: PostgreSQL — edits survive restarts, redeploys and device changes.';
+          badge.style.color = '#34d399';
+        } else {
+          badge.textContent = '🔴 WARNING: using a local SQLite file. On most cloud hosts this is wiped on redeploy/sleep — set DATABASE_URL.';
+          badge.style.color = 'var(--logout-red)';
+        }
+      } catch (_) {
+        badge.textContent = '';
+      }
+    }
+
+    async function loadSiteContent() {
+      loadStorageStatus();
+      const statusEl = document.getElementById('cmsSaveStatus');
+      try {
+        const res = await fetch(`/api/admin/content?_=${Date.now()}`, {
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        populateSiteContentForm(data.content || {});
+      } catch (e) {
+        statusEl.textContent = 'Unable to load site content from database.';
+        statusEl.style.color = 'var(--logout-red)';
+      }
+    }
+
+    async function saveSiteContent() {
+      const statusEl = document.getElementById('cmsSaveStatus');
+      const saveBtn = document.getElementById('btnSaveCms');
+      const form = document.getElementById('siteContentForm');
+      if (!form.reportValidity()) return;
+
+      const formData = new FormData(form);
+      const payload = {};
+      formData.forEach((value, key) => {
+        payload[key] = String(value).trim();
+      });
+
+      statusEl.textContent = 'Saving to database...';
+      statusEl.style.color = 'var(--text-muted)';
+      saveBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/admin/content', {
+          method: 'PUT',
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: payload })
+        });
+
+        if (res.status === 401) { handleLogout(); return; }
+
+        const rawText = await res.text();
+        let result = null;
+        try {
+          result = rawText ? JSON.parse(rawText) : null;
+        } catch (_) {
+          throw new Error(`Unexpected response from server (${res.status})`);
+        }
+
+        if (!res.ok || !result || !result.success || !result.content) {
+          throw new Error((result && (result.message || result.error)) || `Save failed (${res.status})`);
+        }
+
+        // Re-hydrate form from verified DB state
+        populateSiteContentForm(result.content);
+        broadcastLiveSync('content');
+
+        statusEl.textContent = '✓ Saved & live website updated!';
+        statusEl.style.color = '#34d399';
+        showToast('✓ Site content & highlights saved to database!');
+        clearTimeout(statusEl._clearTimer);
+        statusEl._clearTimer = setTimeout(() => { statusEl.textContent = ''; }, 4500);
+      } catch (err) {
+        statusEl.textContent = `⚠️ ${err.message || 'Error saving content.'}`;
+        statusEl.style.color = 'var(--logout-red)';
+        showToast(`⚠️ ${err.message || 'Save failed'}`, true);
+      } finally {
+        saveBtn.disabled = false;
+      }
+    }
+
+    async function resetSiteContent() {
+      if (!confirm('Reset all Hero, Stats, Placements, and Contact text back to original defaults?')) return;
+      const statusEl = document.getElementById('cmsSaveStatus');
+      try {
+        const res = await fetch('/api/admin/content/reset', {
+          method: 'POST',
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        const result = await res.json();
+        if (res.ok && result.success && result.content) {
+          populateSiteContentForm(result.content);
+          broadcastLiveSync('content');
+          statusEl.textContent = '✓ Defaults restored & synced.';
+          statusEl.style.color = '#34d399';
+          showToast('✓ Default site content restored');
+        } else {
+          throw new Error(result.message || result.error || 'Reset failed');
+        }
+      } catch (err) {
+        statusEl.textContent = `⚠️ ${err.message}`;
+        statusEl.style.color = 'var(--logout-red)';
+        showToast(`⚠️ ${err.message}`, true);
+      }
+    }
+
+    /* ========================================================
+       5. STAFF ROSTER MANAGEMENT (ADD + PHOTO + ENABLE/DISABLE + DELETE)
+       ======================================================== */
+    function openStaffModal() {
+      document.getElementById('staffFormStatus').textContent = '';
+      document.getElementById('staffModal').classList.add('open');
+      loadStaffRoster();
+    }
+
+    function closeStaffModal() {
+      document.getElementById('staffModal').classList.remove('open');
+    }
+
+    function clearNewStaffPhoto() {
+      newStaffCroppedBlob = null;
+      if (newStaffPreviewUrl) {
+        URL.revokeObjectURL(newStaffPreviewUrl);
+        newStaffPreviewUrl = '';
+      }
+      document.getElementById('newStaffAvatarFileInput').value = '';
+      document.getElementById('newStaffAvatarPreview').innerHTML = '👤';
+      document.getElementById('newStaffPhotoLabel').textContent = 'No photo selected (will show initials)';
+      document.getElementById('btnClearNewStaffPhoto').style.display = 'none';
+    }
+
+    function triggerExistingStaffPhotoUpload(userId) {
+      targetExistingStaffId = userId;
+      const input = document.getElementById('existingStaffAvatarInput');
+      input.value = '';
+      input.click();
+    }
+
+    function handleExistingStaffFileChosen(e) {
+      if (!targetExistingStaffId) return;
+      handleAvatarFileChosen(e, { mode: 'staff-id', userId: targetExistingStaffId });
+    }
+
+    async function removeExistingStaffAvatar(userId, fullName) {
+      const statusLbl = document.getElementById('staffFormStatus');
+      try {
+        const res = await fetch(`/api/admin/staff/${userId}/avatar`, {
+          method: 'DELETE',
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        if (res.ok && data.success) {
+          statusLbl.textContent = data.message || `Removed photo for ${fullName}.`;
+          statusLbl.style.color = '#34d399';
+          await loadStaffRoster();
+          if (currentUser && currentUser.id === userId) {
+            currentUser.avatar_url = '';
+            renderAvatarNode(document.getElementById('userAvatar'), '', currentUser.name);
+          }
+          broadcastLiveSync('staff');
+          showToast('✓ Staff profile photo removed');
+        } else {
+          statusLbl.textContent = data.message || 'Could not remove photo.';
+          statusLbl.style.color = 'var(--logout-red)';
+        }
+      } catch (_) {
+        statusLbl.textContent = 'Network error.';
+        statusLbl.style.color = 'var(--logout-red)';
+      }
+    }
+
+    async function loadStaffRoster() {
+      try {
+        const res = await fetch(`/api/admin/staff?_=${Date.now()}`, { credentials: 'same-origin', cache: 'no-store' });
+        if (res.status === 401) { handleLogout(); return; }
+        const data = await res.json();
+        staffRosterCache = data.staff || [];
+        const container = document.getElementById('staffListContainer');
+        if (!staffRosterCache.length) {
+          container.innerHTML = 'No staff profiles found.';
+          return;
+        }
+
+        container.innerHTML = staffRosterCache.map(s => {
+          const isProtected = s.username === 'admin' || (currentUser && s.id === currentUser.id);
+          const initials = getInitials(s.full_name);
+          const avatarInner = s.avatar_url
+            ? `<img src="${escapeHtml(s.avatar_url)}" alt="${escapeHtml(s.full_name)}" onerror="this.parentElement.textContent='${escapeHtml(initials)}'">`
+            : escapeHtml(initials);
+
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0.6rem; border-bottom:1px solid var(--border); gap:0.75rem; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <div class="staff-avatar-thumb">${avatarInner}</div>
+                <div>
+                  <strong>${escapeHtml(s.full_name)}</strong> <span style="color:var(--text-muted);">(${escapeHtml(s.username)})</span><br>
+                  <span style="color:var(--text-muted); font-size:0.75rem;">${escapeHtml(s.role.toUpperCase())} • Dept: ${escapeHtml(s.department)}</span>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+                <span style="font-size:0.75rem; padding:3px 9px; border-radius:20px; font-weight:700; ${s.is_active ? 'background:rgba(16,185,129,0.16); color:#34d399; border:1px solid rgba(16,185,129,0.4);' : 'background:rgba(255,77,79,0.16); color:var(--logout-red); border:1px solid rgba(255,77,79,0.4);'}">
+                  ${s.is_active ? '● Active' : '○ Disabled'}
+                </span>
+                <button type="button" class="btn-act btn-photo-sm" onclick="triggerExistingStaffPhotoUpload(${s.id})">
+                  📷 ${s.avatar_url ? 'Change Photo' : 'Add Photo'}
+                </button>
+                ${s.avatar_url ? `
+                  <button type="button" class="btn-act btn-call" onclick="removeExistingStaffAvatar(${s.id}, '${escapeHtml(s.full_name).replace(/'/g, "\\'")}')">
+                    ✕ Remove Photo
+                  </button>
+                ` : ''}
+                ${!isProtected ? `
+                  <button type="button" class="btn-act ${s.is_active ? 'btn-warn-sm' : 'btn-success-sm'}" onclick="toggleStaffStatus(${s.id})">
+                    ${s.is_active ? 'Disable' : 'Enable'}
+                  </button>
+                  <button type="button" class="btn-act btn-danger-sm" onclick="deleteStaffMember(${s.id}, '${escapeHtml(s.full_name).replace(/'/g, "\\'")}', '${escapeHtml(s.username).replace(/'/g, "\\'")}')">
+                    🗑️ Delete
+                  </button>
+                ` : `
+                  <span style="font-size:0.72rem; color:var(--accent-bright); font-weight:700; padding:2px 6px;">Protected</span>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error("Staff roster error:", e);
+      }
+    }
+
+    async function toggleStaffStatus(userId) {
+      const statusLbl = document.getElementById('staffFormStatus');
+      try {
+        const res = await fetch(`/api/admin/staff/toggle/${userId}`, {
+          method: 'POST',
+          credentials: 'same-origin'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        const result = await res.json();
+        if (res.ok && result.success) {
+          statusLbl.textContent = result.message || 'Account status updated.';
+          statusLbl.style.color = '#34d399';
+          await loadStaffRoster();
+          broadcastLiveSync('staff');
+        } else {
+          statusLbl.textContent = result.message || result.error || 'Could not update status.';
+          statusLbl.style.color = 'var(--logout-red)';
+        }
+      } catch (err) {
+        statusLbl.textContent = 'Network or server error.';
+        statusLbl.style.color = 'var(--logout-red)';
+      }
+    }
+
+    async function deleteStaffMember(userId, fullName, username) {
+      if (!confirm(`Permanently delete staff member "${fullName}" (${username})? They will immediately lose all portal access.`)) {
+        return;
+      }
+      const statusLbl = document.getElementById('staffFormStatus');
+      try {
+        const res = await fetch(`/api/admin/staff/${userId}`, {
+          method: 'DELETE',
+          credentials: 'same-origin'
+        });
+        if (res.status === 401) { handleLogout(); return; }
+        const result = await res.json();
+        if (res.ok && result.success) {
+          statusLbl.textContent = result.message || 'Staff member deleted.';
+          statusLbl.style.color = '#34d399';
+          await loadStaffRoster();
+          broadcastLiveSync('staff');
+        } else {
+          statusLbl.textContent = result.message || result.error || 'Could not delete staff member.';
+          statusLbl.style.color = 'var(--logout-red)';
+        }
+      } catch (err) {
+        statusLbl.textContent = 'Network or server error.';
+        statusLbl.style.color = 'var(--logout-red)';
+      }
+    }
+
+    async function handleCreateStaff(e) {
+      e.preventDefault();
+      const statusLbl = document.getElementById('staffFormStatus');
+      const createBtn = document.getElementById('btnCreateStaff');
+      statusLbl.textContent = 'Creating account...';
+      statusLbl.style.color = 'var(--text-muted)';
+      createBtn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('full_name', document.getElementById('staffFullName').value.trim());
+      formData.append('username', document.getElementById('staffUsername').value.trim());
+      formData.append('role', document.getElementById('staffRole').value);
+      formData.append('department', document.getElementById('staffDept').value);
+      formData.append('password', document.getElementById('staffPassword').value.trim());
+      if (newStaffCroppedBlob) {
+        formData.append('avatar_file', newStaffCroppedBlob, 'staff_avatar.png');
+      }
+
+      try {
+        const res = await fetch('/api/admin/staff/create', {
+          method: 'POST',
+          credentials: 'same-origin',
+          body: formData
+        });
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          statusLbl.textContent = result.message || 'Account created successfully!';
+          statusLbl.style.color = '#34d399';
+          document.getElementById('createStaffForm').reset();
+          clearNewStaffPhoto();
+          await loadStaffRoster();
+          broadcastLiveSync('staff');
+          showToast('✓ Staff profile created & synced');
+        } else {
+          statusLbl.textContent = result.message || result.error || 'Creation failed.';
+          statusLbl.style.color = 'var(--logout-red)';
+        }
+      } catch (err) {
+        statusLbl.textContent = 'Network or server error.';
+        statusLbl.style.color = 'var(--logout-red)';
+      } finally {
+        createBtn.disabled = false;
+      }
+    }
+
+    /* ========================================================
+       6. INTERACTIVE CANVAS IMAGE CROPPER (ZOOM, PAN, ROTATE, CROP)
+       ======================================================== */
+    const cropState = {
+      context: null,       // { mode: 'self' | 'new-staff' | 'staff-id', userId?: number }
+      img: null,
+      viewportSize: 300,
+      baseScale: 1,
+      zoom: 1,
+      rotation: 0,         // degrees (0, 90, 180, 270)
+      offsetX: 0,
+      offsetY: 0,
+      dragging: false,
+      lastX: 0,
+      lastY: 0
+    };
+
+    function handleAvatarFileChosen(event, targetContext) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      const lowerName = (file.name || '').toLowerCase();
+      const validExt = lowerName.endsWith('.jpg') || lowerName.endsWith('.jpeg') || lowerName.endsWith('.png') || lowerName.endsWith('.webp');
+      if (!validTypes.includes(file.type) && !validExt) {
+        alert('Please choose a valid JPG, PNG, or WebP image.');
+        event.target.value = '';
+        return;
+      }
+
+      if (file.size > 12 * 1024 * 1024) {
+        alert('Image file is too large (max 12 MB).');
+        event.target.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (loadEvt) => {
+        const img = new Image();
+        img.onload = () => {
+          cropState.context = targetContext;
+          cropState.img = img;
+          cropState.rotation = 0;
+          cropState.zoom = 1;
+          cropState.offsetX = 0;
+          cropState.offsetY = 0;
+          recomputeCropBaseScale();
+          document.getElementById('cropperZoomSlider').value = '1';
+          document.getElementById('cropperZoomLabel').textContent = '1.00×';
+          document.getElementById('cropperStatusMsg').textContent = '';
+          document.getElementById('avatarCropperModal').classList.add('open');
+          renderCropperCanvases();
+        };
+        img.onerror = () => {
+          alert('Could not decode the selected image file.');
+        };
+        img.src = loadEvt.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = '';
+    }
+
+    function getRotatedDimensions() {
+      if (!cropState.img) return { w: 1, h: 1 };
+      const rad = ((cropState.rotation % 360) + 360) % 360;
+      if (rad === 90 || rad === 270) {
+        return { w: cropState.img.naturalHeight, h: cropState.img.naturalWidth };
+      }
+      return { w: cropState.img.naturalWidth, h: cropState.img.naturalHeight };
+    }
+
+    function recomputeCropBaseScale() {
+      const { w, h } = getRotatedDimensions();
+      const size = cropState.viewportSize;
+      cropState.baseScale = Math.max(size / w, size / h);
+      clampCropOffsets();
+    }
+
+    function clampCropOffsets() {
+      if (!cropState.img) return;
+      const { w, h } = getRotatedDimensions();
+      const totalScale = cropState.baseScale * cropState.zoom;
+      const drawnW = w * totalScale;
+      const drawnH = h * totalScale;
+      const halfSize = cropState.viewportSize / 2;
+      const maxOffsetX = Math.max(0, (drawnW / 2) - halfSize);
+      const maxOffsetY = Math.max(0, (drawnH / 2) - halfSize);
+      cropState.offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, cropState.offsetX));
+      cropState.offsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, cropState.offsetY));
+    }
+
+    function drawCroppedToCanvas(canvas, outputSize) {
+      if (!cropState.img || !canvas) return;
+      const ctx = canvas.getContext('2d');
+      const ratio = outputSize / cropState.viewportSize;
+      const totalScale = cropState.baseScale * cropState.zoom * ratio;
+
+      ctx.clearRect(0, 0, outputSize, outputSize);
+      ctx.fillStyle = '#071930';
+      ctx.fillRect(0, 0, outputSize, outputSize);
+
+      ctx.save();
+      ctx.translate(
+        (outputSize / 2) + (cropState.offsetX * ratio),
+        (outputSize / 2) + (cropState.offsetY * ratio)
+      );
+      ctx.rotate((cropState.rotation * Math.PI) / 180);
+      ctx.scale(totalScale, totalScale);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(
+        cropState.img,
+        -cropState.img.naturalWidth / 2,
+        -cropState.img.naturalHeight / 2
+      );
+      ctx.restore();
+    }
+
+    function renderCropperCanvases() {
+      drawCroppedToCanvas(document.getElementById('cropperCanvas'), 300);
+      drawCroppedToCanvas(document.getElementById('cropperPreviewCircle'), 120);
+      drawCroppedToCanvas(document.getElementById('cropperPreviewSquare'), 120);
+    }
+
+    function handleCropZoomSlider(val) {
+      cropState.zoom = Math.max(1, Math.min(3.5, parseFloat(val) || 1));
+      document.getElementById('cropperZoomLabel').textContent = `${cropState.zoom.toFixed(2)}×`;
+      clampCropOffsets();
+      renderCropperCanvases();
+    }
+
+    function nudgeCropZoom(delta) {
+      const next = Math.max(1, Math.min(3.5, cropState.zoom + delta));
+      document.getElementById('cropperZoomSlider').value = String(next);
+      handleCropZoomSlider(next);
+    }
+
+    function rotateCropImage(deg) {
+      cropState.rotation = (cropState.rotation + deg) % 360;
+      cropState.offsetX = 0;
+      cropState.offsetY = 0;
+      recomputeCropBaseScale();
+      renderCropperCanvases();
+    }
+
+    function resetCropTransform() {
+      cropState.rotation = 0;
+      cropState.zoom = 1;
+      cropState.offsetX = 0;
+      cropState.offsetY = 0;
+      recomputeCropBaseScale();
+      document.getElementById('cropperZoomSlider').value = '1';
+      document.getElementById('cropperZoomLabel').textContent = '1.00×';
+      renderCropperCanvases();
+    }
+
+    function closeAvatarCropper() {
+      document.getElementById('avatarCropperModal').classList.remove('open');
+      cropState.img = null;
+      cropState.context = null;
+    }
+
+    // Pointer Drag & Wheel Zoom bindings on cropperViewport
+    (function initCropperEvents() {
+      const viewport = document.getElementById('cropperViewport');
+      if (!viewport) return;
+
+      viewport.addEventListener('pointerdown', (e) => {
+        if (!cropState.img) return;
+        cropState.dragging = true;
+        cropState.lastX = e.clientX;
+        cropState.lastY = e.clientY;
+        viewport.setPointerCapture(e.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (e) => {
+        if (!cropState.dragging || !cropState.img) return;
+        const dx = e.clientX - cropState.lastX;
+        const dy = e.clientY - cropState.lastY;
+        cropState.lastX = e.clientX;
+        cropState.lastY = e.clientY;
+        const rect = viewport.getBoundingClientRect();
+        const scaleFactor = rect.width ? (cropState.viewportSize / rect.width) : 1;
+        cropState.offsetX += dx * scaleFactor;
+        cropState.offsetY += dy * scaleFactor;
+        clampCropOffsets();
+        renderCropperCanvases();
+      });
+
+      const endDrag = (e) => {
+        if (!cropState.dragging) return;
+        cropState.dragging = false;
+        try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+      };
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+
+      viewport.addEventListener('wheel', (e) => {
+        if (!cropState.img) return;
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.1 : -0.1;
+        nudgeCropZoom(delta);
+      }, { passive: false });
+    })();
+
+    async function applyAndSaveCrop() {
+      if (!cropState.img || !cropState.context) return;
+      const statusMsg = document.getElementById('cropperStatusMsg');
+      const saveBtn = document.getElementById('btnApplyCrop');
+      saveBtn.disabled = true;
+      statusMsg.textContent = 'Generating 400×400 cropped avatar...';
+      statusMsg.style.color = 'var(--text-muted)';
+
+      const offscreen = document.createElement('canvas');
+      offscreen.width = 400;
+      offscreen.height = 400;
+      drawCroppedToCanvas(offscreen, 400);
+
+      offscreen.toBlob(async (blob) => {
+        if (!blob) {
+          statusMsg.textContent = 'Failed to generate image.';
+          statusMsg.style.color = 'var(--logout-red)';
+          saveBtn.disabled = false;
+          return;
+        }
+
+        const ctxMode = cropState.context.mode;
+
+        if (ctxMode === 'new-staff') {
+          newStaffCroppedBlob = blob;
+          if (newStaffPreviewUrl) URL.revokeObjectURL(newStaffPreviewUrl);
+          newStaffPreviewUrl = URL.createObjectURL(blob);
+          document.getElementById('newStaffAvatarPreview').innerHTML = `<img src="${newStaffPreviewUrl}" alt="Cropped avatar preview">`;
+          document.getElementById('newStaffPhotoLabel').textContent = '✓ Cropped photo ready (400×400)';
+          document.getElementById('btnClearNewStaffPhoto').style.display = 'inline-flex';
+          saveBtn.disabled = false;
+          closeAvatarCropper();
+          return;
+        }
+
+        // Direct upload to backend for 'self' or existing 'staff-id'
+        const formData = new FormData();
+        formData.append('avatar_file', blob, 'avatar.png');
+
+        const endpoint = ctxMode === 'self'
+          ? '/api/admin/profile/avatar'
+          : `/api/admin/staff/${cropState.context.userId}/avatar`;
+
+        statusMsg.textContent = 'Uploading cropped photo...';
+
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            credentials: 'same-origin',
+            body: formData
+          });
+          if (res.status === 401) { handleLogout(); return; }
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || data.error || 'Upload failed');
+          }
+
+          if (ctxMode === 'self' || (currentUser && cropState.context.userId === currentUser.id)) {
+            currentUser.avatar_url = data.avatar_url;
+            renderAvatarNode(document.getElementById('userAvatar'), data.avatar_url, currentUser.name);
+            if (document.getElementById('myProfileModal').classList.contains('open')) {
+              renderAvatarNode(document.getElementById('myProfileAvatarLg'), data.avatar_url, currentUser.name);
+              document.getElementById('btnRemoveSelfAvatar').style.display = 'inline-flex';
+              document.getElementById('myProfileStatus').textContent = '✓ Profile photo updated!';
+              document.getElementById('myProfileStatus').style.color = '#34d399';
+            }
+          }
+
+          if (document.getElementById('staffModal').classList.contains('open')) {
+            await loadStaffRoster();
+            document.getElementById('staffFormStatus').textContent = data.message || 'Photo updated.';
+            document.getElementById('staffFormStatus').style.color = '#34d399';
+          }
+
+          broadcastLiveSync('staff');
+          showToast('✓ Cropped profile photo saved & synced!');
+          closeAvatarCropper();
+        } catch (err) {
+          statusMsg.textContent = `⚠️ ${err.message}`;
+          statusMsg.style.color = 'var(--logout-red)';
+        } finally {
+          saveBtn.disabled = false;
+        }
+      }, 'image/png', 0.92);
+    }
+
+    loadUserProfile();
+    loadStats();
+    loadLeads();
+
+    setInterval(() => {
+      loadStats();
+      loadLeads();
+    }, 4000);
+  </script>
+</body>
+</html>
